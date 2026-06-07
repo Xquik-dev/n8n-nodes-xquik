@@ -1,0 +1,19 @@
+{
+	"node": "n8n-nodes-xquik",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Data & Storage", "Marketing"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://docs.xquik.com/api-reference/authentication"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://docs.xquik.com/api-reference/overview"
+			}
+		]
+	}
+}
+
