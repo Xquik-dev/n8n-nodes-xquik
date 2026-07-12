@@ -1,5 +1,8 @@
 # n8n-nodes-xquik
 
+> **Xquik is an independent third-party service.** Not affiliated with X Corp.
+> "Twitter" and "X" are trademarks of X Corp.
+
 This is an n8n community node for Xquik. It lets you search X data, inspect account credits, fetch trends, and check follow relationships in n8n workflows.
 
 [n8n](https://n8n.io/) is a fair-code licensed workflow automation platform.
@@ -29,4 +32,3 @@ This package follows the current n8n community-node package format from `n8n-io/
 - [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
 - [Xquik API Authentication](https://docs.xquik.com/api-reference/authentication)
 - [Xquik API Overview](https://docs.xquik.com/api-reference/overview)
-
