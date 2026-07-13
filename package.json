@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-xquik",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "n8n community node for Xquik X data workflows. Not affiliated with X Corp.",
 	"license": "MIT",
 	"homepage": "https://github.com/Xquik-dev/n8n-nodes-xquik",
@@ -19,6 +19,11 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Xquik-dev/n8n-nodes-xquik.git"
+	},
+	"packageManager": "npm@12.0.1",
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
 	},
 	"scripts": {
 		"build": "n8n-node build",

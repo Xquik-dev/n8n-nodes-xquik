@@ -9,7 +9,11 @@ This is an n8n community node for Xquik. It lets you search X data, inspect acco
 
 ## Status
 
-This package source is ready for validation and npm publication. It is not published to npm yet.
+Install `n8n-nodes-xquik` from **Settings → Community Nodes** in n8n.
+
+```sh
+npm install n8n-nodes-xquik
+```
 
 ## Operations
 
