@@ -13,11 +13,14 @@ export class Xquik implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Xquik',
 		name: 'xquik',
-		icon: 'file:xquik.svg',
+		icon: {
+			light: 'file:xquik-light.svg',
+			dark: 'file:xquik-dark.svg',
+		},
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Search X data and inspect Xquik account state',
+		description: 'Search X data and inspect Xquik account state. Not affiliated with X Corp.',
 		defaults: {
 			name: 'Xquik',
 		},
@@ -376,11 +379,7 @@ export class Xquik implements INodeType {
 	}
 }
 
-function rethrowExecutionError(
-	this: IExecuteFunctions,
-	error: unknown,
-	itemIndex: number,
-): never {
+function rethrowExecutionError(this: IExecuteFunctions, error: unknown, itemIndex: number): never {
 	if (error instanceof NodeApiError || error instanceof NodeOperationError) {
 		throw error;
 	}
@@ -407,7 +406,7 @@ async function executeItem(this: IExecuteFunctions, itemIndex: number): Promise<
 
 		addOptionalParameter(query, 'cursor', cursor);
 		addOptionalParameter(query, 'fromUser', additionalFields.fromUser as string | undefined);
-		addOptionalParameter(query, 'lang', additionalFields.lang as string | undefined);
+		addOptionalParameter(query, 'language', additionalFields.lang as string | undefined);
 		addOptionalParameter(query, 'sinceTime', additionalFields.sinceTime as string | undefined);
 		addOptionalParameter(query, 'untilTime', additionalFields.untilTime as string | undefined);
 		addOptionalParameter(

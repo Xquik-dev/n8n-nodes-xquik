@@ -13,7 +13,8 @@
 		"automation"
 	],
 	"author": {
-		"name": "Xquik"
+		"name": "Xquik",
+		"email": "support@xquik.com"
 	},
 	"repository": {
 		"type": "git",
@@ -42,12 +43,12 @@
 		]
 	},
 	"devDependencies": {
-		"@n8n/node-cli": "*",
-		"eslint": "9.29.0",
-		"n8n-workflow": "2.25.1",
-		"prettier": "3.8.3",
-		"release-it": "20.2.0",
-		"typescript": "5.9.3"
+		"@n8n/node-cli": "0.38.8",
+		"eslint": "9.39.5",
+		"n8n-workflow": "2.29.3",
+		"prettier": "3.9.5",
+		"release-it": "20.2.1",
+		"typescript": "6.0.3"
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"

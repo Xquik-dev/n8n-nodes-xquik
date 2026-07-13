@@ -11,7 +11,10 @@ export class XquikApi implements ICredentialType {
 
 	displayName = 'Xquik API';
 
-	icon: Icon = 'file:../icons/xquik.svg';
+	icon: Icon = {
+		light: 'file:../icons/xquik-light.svg',
+		dark: 'file:../icons/xquik-dark.svg',
+	};
 
 	documentationUrl = 'https://docs.xquik.com/api-reference/authentication';
 
