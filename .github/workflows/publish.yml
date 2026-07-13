@@ -13,13 +13,14 @@ concurrency:
 
 jobs:
   publish:
+    name: Publish Verified Package
     if: github.event.release.prerelease == false
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment: npm
     permissions:
-      contents: read
-      id-token: write
+      contents: read # Check out the immutable release tag.
+      id-token: write # Exchange GitHub OIDC for short-lived npm access.
     steps:
       - name: Checkout Release
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
@@ -33,9 +34,6 @@ jobs:
           node-version: "24.15.0"
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
-
-      - name: Set Up npm
-        run: npm install --global npm@12.0.1
 
       - name: Validate Release
         env:
@@ -62,4 +60,4 @@ jobs:
         run: npm pack --dry-run
 
       - name: Publish
-        run: npm publish --access public
+        run: npm run release
