@@ -56,6 +56,9 @@ jobs:
       - name: Audit Published Dependencies
         run: npm audit --omit=dev
 
+      - name: Audit Development Tooling
+        run: npm audit --audit-level=high
+
       - name: Inspect Package
         run: npm pack --dry-run
 
