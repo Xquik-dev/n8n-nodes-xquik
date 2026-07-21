@@ -29,9 +29,6 @@ jobs:
           node-version: "24.15.0"
           cache: npm
 
-      - name: Set Up npm
-        run: npm install --global npm@12.0.1
-
       - name: Install
         run: npm ci --ignore-scripts
 
