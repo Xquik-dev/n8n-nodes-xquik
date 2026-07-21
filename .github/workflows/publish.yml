@@ -63,4 +63,6 @@ jobs:
         run: npm pack --dry-run
 
       - name: Publish
-        run: npm run release
+        env:
+          RELEASE_MODE: "true"
+        run: npm publish --access public --provenance
