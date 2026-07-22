@@ -31,6 +31,20 @@ Create an Xquik API key, then add it to the Xquik API credential in n8n. The nod
 
 This package follows the current n8n community-node package format from `n8n-io/n8n-nodes-starter`.
 
+## Development And Testing
+
+```sh
+npm ci --ignore-scripts
+npm test
+npm run lint
+npm pack --dry-run
+```
+
+The test suite varies request inputs and validates generated request options.
+CI runs it on every pull request and every push to `main`. Bug fixes must
+include a regression test. New behavior must include tests for expected and
+invalid inputs.
+
 ## Resources
 
 - [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
