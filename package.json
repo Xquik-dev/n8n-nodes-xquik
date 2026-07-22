@@ -32,7 +32,8 @@
 		"copy-assets": "node scripts/copy-assets.mjs",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"prepublishOnly": "node scripts/verify-release.mjs"
+		"test": "npm run build && node --test tests/*.test.mjs",
+		"prepublishOnly": "npm test && node scripts/verify-release.mjs"
 	},
 	"files": [
 		"dist"
