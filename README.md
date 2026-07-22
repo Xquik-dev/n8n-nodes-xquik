@@ -1,17 +1,12 @@
 # n8n-nodes-xquik
 
-> **Xquik is an independent third-party service.** Not affiliated with X Corp.
-> "Twitter" and "X" are trademarks of X Corp.
-
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
 
-This is an n8n community node for Xquik. It lets you search X data, inspect account credits, fetch trends, and check follow relationships in n8n workflows.
+Use Xquik in n8n workflows. Search X, check credits, read trends, and inspect follow relationships.
 
-[n8n](https://n8n.io/) is a fair-code licensed workflow automation platform.
+## Install
 
-## Status
-
-Install `n8n-nodes-xquik` from **Settings → Community Nodes** in n8n.
+Install `n8n-nodes-xquik` from **Settings → Community Nodes**.
 
 ```sh
 npm install n8n-nodes-xquik
@@ -29,11 +24,7 @@ npm install n8n-nodes-xquik
 
 Create an Xquik API key, then add it to the Xquik API credential in n8n. The node sends the key in the `x-api-key` header.
 
-## Compatibility
-
-This package follows the current n8n community-node package format from `n8n-io/n8n-nodes-starter`.
-
-## Development And Testing
+## Development and Testing
 
 ```sh
 npm ci --ignore-scripts
@@ -42,13 +33,12 @@ npm run lint
 npm pack --dry-run
 ```
 
-The test suite varies request inputs and validates generated request options.
-CI runs it on every pull request and every push to `main`. Bug fixes must
-include a regression test. New behavior must include tests for expected and
-invalid inputs.
+Tests validate request paths, parameters, credentials, and errors.
 
 ## Resources
 
 - [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
 - [Xquik API Authentication](https://docs.xquik.com/api-reference/authentication)
 - [Xquik API Overview](https://docs.xquik.com/api-reference/overview)
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
