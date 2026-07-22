@@ -3,6 +3,8 @@
 > **Xquik is an independent third-party service.** Not affiliated with X Corp.
 > "Twitter" and "X" are trademarks of X Corp.
 
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
+
 This is an n8n community node for Xquik. It lets you search X data, inspect account credits, fetch trends, and check follow relationships in n8n workflows.
 
 [n8n](https://n8n.io/) is a fair-code licensed workflow automation platform.
