@@ -1,8 +1,23 @@
-# n8n-nodes-xquik
+# Xquik n8n Nodes: Tweet Search, Users, Trends & Follow Checks
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
 
-Use Xquik in n8n workflows. Search X, check credits, read trends, and inspect follow relationships.
+Build n8n workflows that search tweets, find users, read trends, and check follow relationships.
+
+Use this package for bounded, read-only X data steps.
+
+## Choose an Operation
+
+| Customer question | n8n operation | Xquik route |
+| --- | --- | --- |
+| How do I search tweets in n8n? | Tweet: search | `GET /x/tweets/search` |
+| How do I search X or Twitter users? | User: search | `GET /x/users/search` |
+| How do I read regional X trends? | Trend: get | `GET /x/trends` |
+| Does one account follow another? | Follow: check | `GET /x/followers/check` |
+| How do I check available credits? | Account: get credits | `GET /credits` |
+
+Need full follower exports or posting automation? Use the
+[Xquik API](https://docs.xquik.com/api-reference/overview) instead.
 
 ## Install
 
@@ -11,14 +26,6 @@ Install `n8n-nodes-xquik` from **Settings → Community Nodes**.
 ```sh
 npm install n8n-nodes-xquik
 ```
-
-## Operations
-
-- Account: get credits.
-- Tweet: search tweets by query.
-- User: search users by name or username.
-- Trend: get trending topics by WOEID.
-- Follow: check whether one username follows another.
 
 ## Credentials
 
