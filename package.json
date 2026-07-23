@@ -28,11 +28,12 @@
 	"scripts": {
 		"build": "npm run clean && tsc && npm run copy-assets",
 		"build:watch": "tsc --watch",
+		"check:reproducible": "node scripts/check-reproducible.mjs",
 		"clean": "node scripts/clean.mjs",
 		"copy-assets": "node scripts/copy-assets.mjs",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"test": "npm run build && node --test tests/*.test.mjs",
+		"test": "npm run build && node --test --experimental-test-coverage --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-include='dist/credentials/**/*.js' --test-coverage-include='dist/nodes/**/*.js' --test-coverage-lines=100 tests/*.test.mjs",
 		"prepublishOnly": "npm test && node scripts/verify-release.mjs"
 	},
 	"files": [
@@ -50,12 +51,12 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "9.29.0",
-		"@n8n/eslint-plugin-community-nodes": "0.24.0",
+		"@n8n/eslint-plugin-community-nodes": "0.25.0",
 		"eslint": "9.29.0",
 		"eslint-import-resolver-typescript": "4.4.5",
 		"eslint-plugin-import-x": "4.17.1",
 		"eslint-plugin-n8n-nodes-base": "1.16.7",
-		"n8n-workflow": "2.29.3",
+		"n8n-workflow": "2.31.3",
 		"typescript": "6.0.3",
 		"typescript-eslint": "8.65.0"
 	},

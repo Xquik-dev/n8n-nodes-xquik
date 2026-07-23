@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Xquik Contributors
+# SPDX-License-Identifier: MIT
+
 name: Publish to npm
 
 on:
@@ -35,6 +38,9 @@ jobs:
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
 
+      - name: Set Up npm
+        run: npm install --global npm@12.0.1 --ignore-scripts
+
       - name: Validate Release
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
@@ -58,6 +64,12 @@ jobs:
 
       - name: Audit Development Tooling
         run: npm audit --audit-level=high
+
+      - name: Verify Registry Signatures
+        run: npm audit signatures
+
+      - name: Check Reproducible Package
+        run: npm run check:reproducible
 
       - name: Inspect Package
         run: npm pack --dry-run

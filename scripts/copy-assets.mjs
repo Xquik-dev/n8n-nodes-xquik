@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Xquik Contributors
+// SPDX-License-Identifier: MIT
+
 import { copyFile, mkdir } from 'node:fs/promises';
 
 const assets = [

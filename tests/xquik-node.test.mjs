@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Xquik Contributors
+// SPDX-License-Identifier: MIT
+
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import test from 'node:test';
@@ -180,6 +183,19 @@ test('execute returns an error item when continue-on-fail is enabled', async () 
 	assert.equal(result[0][0].pairedItem.item, 0);
 	assert.equal(typeof result[0][0].json.error, 'string');
 	assert.ok(result[0][0].json.error.length > 0);
+});
+
+test('execute returns a stable fallback for non-error failures', async () => {
+	const { context } = createExecutionContext(
+		[{ resource: 'account', operation: 'getCredits' }],
+		{ continueOnFail: true, parameterError: 'parameter failed' },
+	);
+
+	const result = await new Xquik().execute.call(context);
+
+	assert.deepEqual(result, [
+		[{ json: { error: 'Unknown error' }, pairedItem: { item: 0 } }],
+	]);
 });
 
 test('execute wraps unexpected errors with item context', async () => {

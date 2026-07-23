@@ -37,10 +37,17 @@ Create an Xquik API key, then add it to the Xquik API credential in n8n. The nod
 npm ci --ignore-scripts
 npm test
 npm run lint
+npm audit --omit=dev
+npm audit --audit-level=high
+npm audit signatures
+npm run check:reproducible
 npm pack --dry-run
 ```
 
 Tests validate request paths, parameters, credentials, and errors.
+`npm test` enforces 100% line, branch, and function coverage.
+CI also verifies REUSE 3.3 license metadata.
+CI builds twice and compares every package byte.
 
 ## Resources
 
