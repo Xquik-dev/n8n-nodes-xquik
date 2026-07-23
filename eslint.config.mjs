@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Xquik Contributors
+// SPDX-License-Identifier: MIT
+
 import js from '@eslint/js';
 import { n8nCommunityNodesPlugin } from '@n8n/eslint-plugin-community-nodes';
 import { globalIgnores } from 'eslint/config';
