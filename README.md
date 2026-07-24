@@ -5,6 +5,7 @@
 Build n8n workflows that search tweets, find users, read trends, and check follow relationships.
 
 Use this package for bounded, read-only X data steps.
+Each operation returns structured data for later n8n nodes.
 
 ## Choose an Operation
 
@@ -54,5 +55,8 @@ CI builds twice and compares every package byte.
 - [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
 - [Xquik API Authentication](https://docs.xquik.com/api-reference/authentication)
 - [Xquik API Overview](https://docs.xquik.com/api-reference/overview)
+- [Organization support policy](https://github.com/Xquik-dev/.github/blob/main/SUPPORT.md)
+- [Organization security policy](https://github.com/Xquik-dev/.github/blob/main/SECURITY.md)
+- [Contribution guide](https://github.com/Xquik-dev/.github/blob/main/CONTRIBUTING.md)
 
 Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
