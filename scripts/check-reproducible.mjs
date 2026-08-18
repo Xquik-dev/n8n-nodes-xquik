@@ -48,8 +48,7 @@ assert.deepEqual(secondBuild, firstBuild, 'Repeated builds produced different fi
 const workspace = await mkdtemp(join(tmpdir(), 'n8n-nodes-xquik-reproducible-'));
 const firstPack = join(workspace, 'first');
 const secondPack = join(workspace, 'second');
-await mkdir(firstPack);
-await mkdir(secondPack);
+await Promise.all([firstPack, secondPack].map((directory) => mkdir(directory)));
 
 runNpm(['pack', '--ignore-scripts', '--pack-destination', firstPack]);
 runNpm(['pack', '--ignore-scripts', '--pack-destination', secondPack]);
