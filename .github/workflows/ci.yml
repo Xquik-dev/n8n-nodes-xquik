@@ -26,16 +26,16 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Check License Metadata
+      - name: Check license metadata
         uses: fsfe/reuse-action@676e2d560c9a403aa252096d99fcab3e1132b0f5 # v6.0.0
 
-      - name: Set Up Node
+      - name: Set up Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: "24.15.0"
           cache: npm
 
-      - name: Set Up npm
+      - name: Set up npm
         run: |
           corepack enable npm
           npm --version
@@ -49,17 +49,17 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Audit Published Dependencies
+      - name: Audit published dependencies
         run: npm audit --omit=dev
 
-      - name: Audit Development Tooling
+      - name: Audit development tools
         run: npm audit --audit-level=high
 
-      - name: Verify Registry Signatures
+      - name: Verify registry signatures
         run: npm audit signatures
 
-      - name: Check Reproducible Package
+      - name: Check reproducible package
         run: npm run check:reproducible
 
-      - name: Pack Check
+      - name: Inspect package
         run: npm pack --dry-run

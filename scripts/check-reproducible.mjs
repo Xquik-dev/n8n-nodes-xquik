@@ -14,7 +14,7 @@ function runNpm(args) {
 		throw result.error;
 	}
 	if (result.status !== 0) {
-		throw new Error(`npm ${args.join(' ')} failed with status ${result.status}`);
+		throw new Error(`npm ${args.join(' ')} failed with status ${result.status}. Review its output.`);
 	}
 }
 
@@ -43,7 +43,7 @@ const firstBuild = await hashFiles('dist');
 
 runNpm(['run', 'build']);
 const secondBuild = await hashFiles('dist');
-assert.deepEqual(secondBuild, firstBuild, 'Repeated builds produced different files');
+assert.deepEqual(secondBuild, firstBuild, 'Build files differ. Check generated assets.');
 
 const workspace = await mkdtemp(join(tmpdir(), 'n8n-nodes-xquik-reproducible-'));
 const firstPack = join(workspace, 'first');
@@ -54,12 +54,12 @@ runNpm(['pack', '--ignore-scripts', '--pack-destination', firstPack]);
 runNpm(['pack', '--ignore-scripts', '--pack-destination', secondPack]);
 
 const packageNames = (await readdir(firstPack)).filter((name) => name.endsWith('.tgz'));
-assert.equal(packageNames.length, 1, 'Expected exactly one package archive');
+assert.equal(packageNames.length, 1, 'Package count mismatch. Expected one archive.');
 const [packageName] = packageNames;
 assert.deepEqual(
 	await readFile(join(secondPack, packageName)),
 	await readFile(join(firstPack, packageName)),
-	'Repeated package archives differ',
+	'Package archives differ. Check generated files and timestamps.',
 );
 
-process.stdout.write('Build outputs and package archives are reproducible.\n');
+process.stdout.write('Build and package archives are reproducible.\n');

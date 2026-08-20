@@ -12,6 +12,8 @@ import { NodeApiError, NodeConnectionTypes, NodeOperationError } from 'n8n-workf
 
 import { addOptionalParameter, xquikApiRequest } from './GenericFunctions';
 
+const UNKNOWN_ERROR = 'Request failed. Review the input and retry.';
+
 export class Xquik implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Xquik',
@@ -23,7 +25,7 @@ export class Xquik implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Search X data and inspect Xquik account state. Not affiliated with X Corp.',
+		description: 'Search tweets, users, trends, follows, and Xquik credits. Not affiliated with X Corp.',
 		defaults: {
 			name: 'Xquik',
 		},
@@ -178,7 +180,7 @@ export class Xquik implements INodeType {
 						operation: ['search'],
 					},
 				},
-				description: 'Search query',
+				description: 'Words or operators to search for',
 			},
 			{
 				displayName: 'Query Type',
@@ -251,35 +253,35 @@ export class Xquik implements INodeType {
 						name: 'fromUser',
 						type: 'string',
 						default: '',
-						description: 'Only include tweets from this username, without @',
+						description: 'Include only tweets from this username, without @',
 					},
 					{
 						displayName: 'Language',
 						name: 'lang',
 						type: 'string',
 						default: '',
-						description: 'Language code filter',
+						description: 'Filter results by language code',
 					},
 					{
 						displayName: 'Since Time',
 						name: 'sinceTime',
 						type: 'dateTime',
 						default: '',
-						description: 'Only include tweets after this timestamp',
+						description: 'Include only tweets after this time',
 					},
 					{
 						displayName: 'Until Time',
 						name: 'untilTime',
 						type: 'dateTime',
 						default: '',
-						description: 'Only include tweets before this timestamp',
+						description: 'Include only tweets before this time',
 					},
 					{
 						displayName: 'Verified Only',
 						name: 'verifiedOnly',
 						type: 'boolean',
 						default: false,
-						description: 'Whether to only include tweets from verified users',
+						description: 'Whether to include only tweets from verified users',
 					},
 				],
 			},
@@ -295,7 +297,7 @@ export class Xquik implements INodeType {
 						operation: ['check'],
 					},
 				},
-				description: 'Username to check, without @',
+				description: 'Username that may follow the target, without @',
 			},
 			{
 				displayName: 'Target Username',
@@ -309,7 +311,7 @@ export class Xquik implements INodeType {
 						operation: ['check'],
 					},
 				},
-				description: 'Target username, without @',
+				description: 'Username that may be followed, without @',
 			},
 			{
 				displayName: 'WOEID',
@@ -325,7 +327,7 @@ export class Xquik implements INodeType {
 					},
 				},
 				default: 1,
-				description: 'Region WOEID code. 1 is worldwide.',
+				description: 'Region WOEID. Use 1 for worldwide trends.',
 			},
 			{
 				displayName: 'Count',
@@ -342,7 +344,7 @@ export class Xquik implements INodeType {
 					},
 				},
 				default: 30,
-				description: 'Number of trending topics to return',
+				description: 'Maximum number of trends to return',
 			},
 		],
 	};
@@ -365,7 +367,7 @@ export class Xquik implements INodeType {
 				if (this.continueOnFail()) {
 					returnData.push({
 						json: {
-							error: error instanceof Error ? error.message : 'Unknown error',
+							error: error instanceof Error ? error.message : UNKNOWN_ERROR,
 						},
 						pairedItem: {
 							item: i,
