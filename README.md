@@ -1,13 +1,12 @@
-# Xquik n8n Nodes: Tweet Search, Users, Trends & Follow Checks
+# Xquik n8n nodes for Twitter search, users, trends & follow checks
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
 
 Build n8n workflows that search tweets, find users, read trends, and check follow relationships.
 
-Use this package for bounded, read-only X data steps.
-Each operation returns structured data for later n8n nodes.
+Use this package for read-only X data steps with structured n8n output.
 
-## Choose an Operation
+## Choose an operation
 
 | Customer question | n8n operation | Xquik route |
 | --- | --- | --- |
@@ -17,8 +16,7 @@ Each operation returns structured data for later n8n nodes.
 | Does one account follow another? | Follow: check | `GET /x/followers/check` |
 | How do I check available credits? | Account: get credits | `GET /credits` |
 
-Need full follower exports or posting automation? Use the
-[Xquik API](https://docs.xquik.com/api-reference/overview) instead.
+Need full follower exports or posting automation? Use the [Xquik API](https://docs.xquik.com/api-reference/overview).
 
 ## Install
 
@@ -32,7 +30,7 @@ npm install n8n-nodes-xquik
 
 Create an Xquik API key, then add it to the Xquik API credential in n8n. The node sends the key in the `x-api-key` header.
 
-## Development and Testing
+## Development and testing
 
 ```sh
 npm ci --ignore-scripts
@@ -45,16 +43,14 @@ npm run check:reproducible
 npm pack --dry-run
 ```
 
-Tests validate request paths, parameters, credentials, and errors.
-`npm test` enforces 100% line, branch, and function coverage.
-CI also verifies REUSE 3.3 license metadata.
-CI builds twice and compares every package byte.
+Tests cover request paths, parameters, credentials, and errors at 100%.
+CI also checks REUSE 3.3 metadata and reproducible package bytes.
 
 ## Resources
 
-- [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
-- [Xquik API Authentication](https://docs.xquik.com/api-reference/authentication)
-- [Xquik API Overview](https://docs.xquik.com/api-reference/overview)
+- [n8n community nodes](https://docs.n8n.io/integrations/community-nodes/)
+- [Xquik API authentication](https://docs.xquik.com/api-reference/authentication)
+- [Xquik API overview](https://docs.xquik.com/api-reference/overview)
 - [Organization support policy](https://github.com/Xquik-dev/.github/blob/main/SUPPORT.md)
 - [Organization security policy](https://github.com/Xquik-dev/.github/blob/main/SECURITY.md)
 - [Contribution guide](https://github.com/Xquik-dev/.github/blob/main/CONTRIBUTING.md)

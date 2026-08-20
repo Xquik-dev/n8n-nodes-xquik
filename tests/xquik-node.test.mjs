@@ -165,7 +165,7 @@ test('execute returns stable empty data for an unsupported operation', async () 
 test('execute preserves API errors when continue-on-fail is disabled', async () => {
 	const { context } = createExecutionContext(
 		[{ resource: 'account', operation: 'getCredits' }],
-		{ requestError: new Error('request failed') },
+		{ requestError: new Error('Request failed.') },
 	);
 
 	await assert.rejects(() => new Xquik().execute.call(context), NodeApiError);
@@ -174,7 +174,7 @@ test('execute preserves API errors when continue-on-fail is disabled', async () 
 test('execute returns an error item when continue-on-fail is enabled', async () => {
 	const { context } = createExecutionContext(
 		[{ resource: 'account', operation: 'getCredits' }],
-		{ continueOnFail: true, requestError: new Error('request failed') },
+		{ continueOnFail: true, requestError: new Error('Request failed.') },
 	);
 
 	const result = await new Xquik().execute.call(context);
@@ -188,20 +188,19 @@ test('execute returns an error item when continue-on-fail is enabled', async () 
 test('execute returns a stable fallback for non-error failures', async () => {
 	const { context } = createExecutionContext(
 		[{ resource: 'account', operation: 'getCredits' }],
-		{ continueOnFail: true, parameterError: 'parameter failed' },
+		{ continueOnFail: true, parameterError: 'Invalid parameter.' },
 	);
 
 	const result = await new Xquik().execute.call(context);
 
-	assert.deepEqual(result, [
-		[{ json: { error: 'Unknown error' }, pairedItem: { item: 0 } }],
-	]);
+	assert.equal(result[0][0].json.error, 'Request failed. Review the input and retry.');
+	assert.equal(result[0][0].pairedItem.item, 0);
 });
 
 test('execute wraps unexpected errors with item context', async () => {
 	const { context } = createExecutionContext(
 		[{ resource: 'account', operation: 'getCredits' }],
-		{ parameterError: new Error('parameter failed') },
+		{ parameterError: new Error('Invalid parameter.') },
 	);
 
 	await assert.rejects(() => new Xquik().execute.call(context), NodeOperationError);

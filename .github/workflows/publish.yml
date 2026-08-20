@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   publish:
-    name: Publish Verified Package
+    name: Publish verified package
     if: github.event.release.prerelease == false
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -25,25 +25,25 @@ jobs:
       contents: read # Check out the immutable release tag.
       id-token: write # Exchange GitHub OIDC for short-lived npm access.
     steps:
-      - name: Checkout Release
+      - name: Checkout release
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.release.tag_name }}
           persist-credentials: false
 
-      - name: Set Up Node
+      - name: Set up Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: "24.15.0"
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
 
-      - name: Set Up npm
+      - name: Set up npm
         run: |
           corepack enable npm
           npm --version
 
-      - name: Validate Release
+      - name: Validate release
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
@@ -61,19 +61,19 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Audit Published Dependencies
+      - name: Audit published dependencies
         run: npm audit --omit=dev
 
-      - name: Audit Development Tooling
+      - name: Audit development tools
         run: npm audit --audit-level=high
 
-      - name: Verify Registry Signatures
+      - name: Verify registry signatures
         run: npm audit signatures
 
-      - name: Check Reproducible Package
+      - name: Check reproducible package
         run: npm run check:reproducible
 
-      - name: Inspect Package
+      - name: Inspect package
         run: npm pack --dry-run
 
       - name: Publish
