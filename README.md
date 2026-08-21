@@ -1,22 +1,20 @@
-# Xquik n8n nodes for Twitter search, users, trends & follow checks
+# Xquik n8n Twitter Node
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
 
-Build n8n workflows that search tweets, find users, read trends, and check follow relationships.
+Add read-only Twitter data to n8n: search tweets and users, read trends, check follows, and view Xquik credits.
 
-Use this package for read-only X data steps with structured n8n output.
+## Operations
 
-## Choose an operation
-
-| Customer question | n8n operation | Xquik route |
+| Task | n8n operation | Xquik route |
 | --- | --- | --- |
-| How do I search tweets in n8n? | Tweet: search | `GET /x/tweets/search` |
-| How do I search X or Twitter users? | User: search | `GET /x/users/search` |
-| How do I read regional X trends? | Trend: get | `GET /x/trends` |
-| Does one account follow another? | Follow: check | `GET /x/followers/check` |
-| How do I check available credits? | Account: get credits | `GET /credits` |
+| Search tweets | Tweet: search | `GET /x/tweets/search` |
+| Search users | User: search | `GET /x/users/search` |
+| Read regional trends | Trend: get | `GET /x/trends` |
+| Check whether one account follows another | Follow: check | `GET /x/followers/check` |
+| View available credits | Account: get credits | `GET /credits` |
 
-Need full follower exports or posting automation? Use the [Xquik API](https://docs.xquik.com/api-reference/overview).
+Use the [Xquik API](https://docs.xquik.com/api-reference/overview) for full follower exports or approved posting.
 
 ## Install
 
@@ -28,9 +26,9 @@ npm install n8n-nodes-xquik
 
 ## Credentials
 
-Create an Xquik API key, then add it to the Xquik API credential in n8n. The node sends the key in the `x-api-key` header.
+Create an Xquik API key and add it to the Xquik API credential in n8n. The node sends it in the `x-api-key` header.
 
-## Development and testing
+## Verify changes
 
 ```sh
 npm ci --ignore-scripts
@@ -43,8 +41,7 @@ npm run check:reproducible
 npm pack --dry-run
 ```
 
-Tests cover request paths, parameters, credentials, and errors at 100%.
-CI also checks REUSE 3.3 metadata and reproducible package bytes.
+Tests enforce 100% coverage. CI checks request contracts, REUSE 3.3 metadata, and reproducible package bytes.
 
 ## Resources
 
