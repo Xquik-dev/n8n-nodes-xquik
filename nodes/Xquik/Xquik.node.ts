@@ -25,7 +25,7 @@ export class Xquik implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Search tweets, users, trends, follows, and Xquik credits. Not affiliated with X Corp.',
+		description: 'Search tweets and users, read trends, check follows, and view Xquik credits. Not affiliated with X Corp.',
 		defaults: {
 			name: 'Xquik',
 		},
@@ -253,7 +253,7 @@ export class Xquik implements INodeType {
 						name: 'fromUser',
 						type: 'string',
 						default: '',
-						description: 'Include only tweets from this username, without @',
+					description: 'Username to filter by, without @',
 					},
 					{
 						displayName: 'Language',
@@ -297,7 +297,7 @@ export class Xquik implements INodeType {
 						operation: ['check'],
 					},
 				},
-				description: 'Username that may follow the target, without @',
+				description: 'Username to check as the follower, without @',
 			},
 			{
 				displayName: 'Target Username',
@@ -311,7 +311,7 @@ export class Xquik implements INodeType {
 						operation: ['check'],
 					},
 				},
-				description: 'Username that may be followed, without @',
+				description: 'Username to check as the followed account, without @',
 			},
 			{
 				displayName: 'WOEID',

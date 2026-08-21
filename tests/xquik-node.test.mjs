@@ -151,7 +151,7 @@ for (const { label, parameters, expectedUrl, expectedQuery } of operationCases) 
 	});
 }
 
-test('execute returns stable empty data for an unsupported operation', async () => {
+test('execute returns empty data for an unsupported operation', async () => {
 	const { context, requests } = createExecutionContext([
 		{ resource: 'unknown', operation: 'unknown' },
 	]);
@@ -185,7 +185,7 @@ test('execute returns an error item when continue-on-fail is enabled', async () 
 	assert.ok(result[0][0].json.error.length > 0);
 });
 
-test('execute returns a stable fallback for non-error failures', async () => {
+test('execute reports a safe fallback for non-error failures', async () => {
 	const { context } = createExecutionContext(
 		[{ resource: 'account', operation: 'getCredits' }],
 		{ continueOnFail: true, parameterError: 'Invalid parameter.' },

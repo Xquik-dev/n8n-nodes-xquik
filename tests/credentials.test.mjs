@@ -6,7 +6,7 @@ import test from 'node:test';
 
 import { XquikApi } from '../dist/credentials/XquikApi.credentials.js';
 
-test('credential metadata preserves authentication and documentation contracts', () => {
+test('credentials match the public authentication contract', () => {
 	const credential = new XquikApi();
 
 	assert.equal(credential.name, 'xquikApi');
