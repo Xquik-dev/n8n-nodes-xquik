@@ -12,12 +12,6 @@ import { NodeApiError } from 'n8n-workflow';
 
 const XQUIK_API_BASE_URL = 'https://xquik.com/api/v1';
 
-function hasParameters(parameters: IDataObject): boolean {
-	return Object.values(parameters).some(
-		(value) => value !== undefined && value !== null && value !== '',
-	);
-}
-
 export function addOptionalParameter(
 	parameters: IDataObject,
 	name: string,
@@ -43,17 +37,16 @@ export async function xquikApiRequest(
 		json: true,
 	};
 
-	if (hasParameters(query)) {
+	if (Object.values(query).some((value) => value !== undefined && value !== null && value !== '')) {
 		options.qs = query;
 	}
 
 	try {
-		const response = await this.helpers.httpRequestWithAuthentication.call(
+		return (await this.helpers.httpRequestWithAuthentication.call(
 			this,
 			'xquikApi',
 			options,
-		);
-		return response as IDataObject;
+		)) as IDataObject;
 	} catch (error) {
 		throw new NodeApiError(this.getNode(), error as JsonObject);
 	}
