@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Xquik Contributors
+# SPDX-License-Identifier: MIT
+#
+# Runs every check a change must pass before it lands or ships.
+# Stops at the first failure and says what to do next.
+
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# run_check <name> <next step> <command...>
+run_check() {
+	local name=$1
+	local next_step=$2
+	shift 2
+	printf 'Running check: %s.\n' "$name"
+	if ! "$@"; then
+		printf 'Check failed: %s. %s\n' "$name" "$next_step" >&2
+		exit 1
+	fi
+}
+
+if command -v reuse >/dev/null 2>&1; then
+	run_check "license metadata" \
+		"Add SPDX headers or a REUSE.toml entry for the files it lists." \
+		reuse lint
+else
+	printf 'Skipping check: license metadata. Install reuse to run it.\n'
+fi
+
+run_check "install" \
+	"Sync package-lock.json with package.json, then retry." \
+	npm ci --ignore-scripts
+
+run_check "build, type check and tests" \
+	"Fix the failing test or cover the lines it reports." \
+	npm test
+
+run_check "lint" \
+	"Run npm run lint:fix, then fix what remains." \
+	npm run lint
+
+run_check "audit of published dependencies" \
+	"Update the vulnerable runtime dependency, then retry." \
+	npm audit --omit=dev
+
+run_check "audit of development tools" \
+	"Update the development tool with the high or critical finding, then retry." \
+	npm audit --audit-level=high
+
+run_check "registry signatures" \
+	"Reinstall the flagged package from the npm registry, then retry." \
+	npm audit signatures
+
+run_check "reproducible package" \
+	"Remove timestamps or other changing output from the build." \
+	npm run check:reproducible
+
+run_check "package contents" \
+	"Fix the files list in package.json." \
+	npm pack --dry-run
+
+printf 'All checks passed.\n'

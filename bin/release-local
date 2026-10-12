@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Xquik Contributors
+# SPDX-License-Identifier: MIT
+#
+# Publishes the version in package.json to npm from this machine,
+# then tags it and creates its GitHub release.
+# The npm token comes from the macOS Keychain and never touches the repository.
+
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+readonly keychain_service="npm"
+readonly keychain_account="burakbayir"
+readonly registry_host="registry.npmjs.org"
+
+npmrc=""
+
+cleanup() {
+	if [[ -n "$npmrc" ]]; then
+		rm -f -- "$npmrc"
+	fi
+}
+trap cleanup EXIT
+trap 'exit 130' INT TERM
+
+step() {
+	printf '%s\n' "$1"
+}
+
+stop() {
+	printf 'Release stopped: %s\n' "$1" >&2
+	exit 1
+}
+
+step "Checking that the working tree is clean."
+[[ -z "$(git status --porcelain)" ]] || stop "commit or remove local changes first."
+
+step "Checking that main is checked out."
+[[ "$(git symbolic-ref --quiet --short HEAD || true)" == "main" ]] || stop "switch to main first."
+
+step "Fetching main from origin."
+git fetch --quiet origin main
+
+step "Checking that main matches origin/main."
+[[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] ||
+	stop "pull or push until main matches origin/main."
+
+step "Reading the package name and version from package.json."
+name=$(node -p "require('./package.json').name")
+version=$(node -p "require('./package.json').version")
+tag="v$version"
+
+step "Checking that tag $tag is new."
+if git rev-parse --quiet --verify "refs/tags/$tag" >/dev/null; then
+	stop "tag $tag exists locally. Bump the version in package.json or delete the local tag."
+fi
+remote_tag_status=0
+git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null || remote_tag_status=$?
+case $remote_tag_status in
+	0) stop "tag $tag exists on origin. Bump the version in package.json first." ;;
+	2) ;;
+	*) stop "could not read tags from origin. Check your network and GitHub access." ;;
+esac
+
+step "Checking GitHub CLI access."
+gh auth status --hostname github.com >/dev/null 2>&1 || stop "run gh auth login first."
+
+step "Running bin/check-local."
+bin/check-local
+
+step "Auditing dependencies for high or critical findings."
+npm audit --audit-level=high || stop "fix the high or critical findings first."
+
+step "Building the package."
+npm run build
+
+step "Checking whether $name@$version is on npm."
+versions_json=$(npm view "$name" versions --json) ||
+	stop "could not read $name from npm. Check your network, then retry."
+if node -e '
+	const versions = [JSON.parse(process.argv[1])].flat();
+	process.exit(versions.includes(process.argv[2]) ? 0 : 1);
+' "$versions_json" "$version"; then
+	step "Skipping the upload because $name@$version is already on npm."
+else
+	step "Reading the npm token from the macOS Keychain."
+	token=$(security find-generic-password -s "$keychain_service" -a "$keychain_account" -w) ||
+		stop "add the npm token to the Keychain as service $keychain_service, account $keychain_account."
+	npmrc=$(mktemp)
+	chmod 600 "$npmrc"
+	printf 'registry=https://%s/\n//%s/:_authToken=%s\n' "$registry_host" "$registry_host" "$token" >"$npmrc"
+	unset token
+
+	step "Publishing $name@$version to npm. Enter a one-time password if npm asks."
+	RELEASE_MODE=true npm publish --userconfig "$npmrc"
+	cleanup
+	npmrc=""
+fi
+
+step "Creating and pushing the annotated tag $tag."
+git tag --annotate "$tag" --message "$name $version"
+git push origin "refs/tags/$tag"
+
+step "Creating the GitHub release $tag."
+notes=""
+if [[ -f CHANGELOG.md ]]; then
+	notes=$(awk -v version="$version" '
+		/^## / {
+			if (found) exit
+			heading = $0
+			sub(/^## +\[?v?/, "", heading)
+			rest = substr(heading, length(version) + 1)
+			if (index(heading, version) == 1 && rest !~ /^[0-9A-Za-z.-]/) {
+				found = 1
+				next
+			}
+		}
+		found { print }
+	' CHANGELOG.md)
+fi
+if [[ -n "${notes//[[:space:]]/}" ]]; then
+	gh release create "$tag" --verify-tag --title "$tag" --notes "$notes"
+else
+	step "CHANGELOG.md has no section for $version, so GitHub writes the notes from merged pull requests."
+	gh release create "$tag" --verify-tag --title "$tag" --generate-notes
+fi
+
+step "Released $name@$version."

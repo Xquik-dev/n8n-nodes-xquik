@@ -31,17 +31,20 @@ Create an Xquik API key and add it to the Xquik API credential in n8n. The node 
 ## Verify changes
 
 ```sh
-npm ci --ignore-scripts
-npm test
-npm run lint
-npm audit --omit=dev
-npm audit --audit-level=high
-npm audit signatures
-npm run check:reproducible
-npm pack --dry-run
+bin/check-local
 ```
 
-Tests enforce 100% coverage. CI checks request contracts, REUSE 3.3 metadata, and reproducible package bytes.
+It installs from the lockfile, builds, type checks, tests, lints, audits dependencies, verifies registry signatures, and checks reproducible package bytes. Tests enforce 100% coverage and check request contracts. It also checks REUSE 3.3 metadata when `reuse` is installed. It stops at the first failure and says what to fix.
+
+## Release
+
+Maintainers release from a local machine:
+
+```sh
+bin/release-local
+```
+
+It runs on a clean `main` that matches `origin/main`. It runs `bin/check-local`, publishes the `package.json` version to npm, then pushes tag `v<version>` and creates its GitHub release. It skips the npm upload when that version is already published.
 
 ## Resources
 
