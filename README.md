@@ -34,7 +34,7 @@ Create an Xquik API key and add it to the Xquik API credential in n8n. The node 
 bin/check-local
 ```
 
-It installs from the lockfile, builds, type checks, tests, lints, audits dependencies, verifies registry signatures, and checks reproducible package bytes. Tests enforce 100% coverage and check request contracts. It also checks REUSE 3.3 metadata when `reuse` is installed. It stops at the first failure and says what to fix.
+It installs from the lockfile, builds, type checks, tests, lints, audits dependencies, verifies registry signatures, and checks reproducible package bytes. Tests enforce 100% coverage and check request contracts. It also checks REUSE 3.3 metadata when `reuse` is installed. It stops at the first failure and says what to fix. When the tree is clean and the commit is on GitHub, it posts the result as the `xquik-local-checks` commit status. Pass `--no-status` to skip that.
 
 ## Release
 
