@@ -4,14 +4,29 @@
 #
 # Publishes the version in package.json to npm from this machine,
 # then tags it and creates its GitHub release.
+# Usage: bin/release-local [--dry-run]
 # The npm token comes from the macOS Keychain and never touches the repository.
 # NPM_KEYCHAIN_SERVICE and NPM_KEYCHAIN_ACCOUNT name the Keychain item that holds it.
+# --dry-run runs every check and npm publish --dry-run, and stops before the
+# upload, the tag and the GitHub release. It reads no token, so it needs neither
+# variable, and it runs on any clean commit.
 
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 readonly registry_host="registry.npmjs.org"
+
+dry_run=false
+for argument in "$@"; do
+	case $argument in
+		--dry-run) dry_run=true ;;
+		*)
+			printf 'Unknown option %s. Run bin/release-local or bin/release-local --dry-run.\n' "$argument" >&2
+			exit 2
+			;;
+	esac
+done
 
 npmrc=""
 
@@ -32,23 +47,31 @@ stop() {
 	exit 1
 }
 
-[[ -n "${NPM_KEYCHAIN_SERVICE:-}" ]] ||
-	stop "set NPM_KEYCHAIN_SERVICE to the service of the Keychain item that holds the npm token."
-[[ -n "${NPM_KEYCHAIN_ACCOUNT:-}" ]] ||
-	stop "set NPM_KEYCHAIN_ACCOUNT to the account of the Keychain item that holds the npm token."
+if $dry_run; then
+	step "This is a dry run, so it reads no npm token."
+else
+	[[ -n "${NPM_KEYCHAIN_SERVICE:-}" ]] ||
+		stop "set NPM_KEYCHAIN_SERVICE to the service of the Keychain item that holds the npm token."
+	[[ -n "${NPM_KEYCHAIN_ACCOUNT:-}" ]] ||
+		stop "set NPM_KEYCHAIN_ACCOUNT to the account of the Keychain item that holds the npm token."
+fi
 
 step "Checking that the working tree is clean."
 [[ -z "$(git status --porcelain)" ]] || stop "commit or remove local changes first."
 
-step "Checking that main is checked out."
-[[ "$(git symbolic-ref --quiet --short HEAD || true)" == "main" ]] || stop "switch to main first."
+if $dry_run; then
+	step "This is a dry run, so the branch is not compared with origin/main."
+else
+	step "Checking that main is checked out."
+	[[ "$(git symbolic-ref --quiet --short HEAD || true)" == "main" ]] || stop "switch to main first."
 
-step "Fetching main from origin."
-git fetch --quiet origin main
+	step "Fetching main from origin."
+	git fetch --quiet origin main
 
-step "Checking that main matches origin/main."
-[[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] ||
-	stop "pull or push until main matches origin/main."
+	step "Checking that main matches origin/main."
+	[[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] ||
+		stop "pull or push until main matches origin/main."
+fi
 
 step "Reading the package name and version from package.json."
 name=$(node -p "require('./package.json').name")
@@ -79,6 +102,19 @@ node scripts/check-audit.mjs || stop "follow each Blocked line above first."
 step "Building the package."
 npm run build
 
+step "Reading the integrity of the package this machine builds."
+local_integrity=$(npm pack --dry-run --json --ignore-scripts | node -e '
+	let input = "";
+	process.stdin.on("data", (chunk) => (input += chunk)).on("end", () => {
+		process.stdout.write(JSON.parse(input)[0].integrity);
+	});
+') || stop "npm pack could not read the package. Fix the error above, then retry."
+
+# Succeeds when npm serves the version with the integrity of the local package.
+npm_matches_build() {
+	[[ "$(npm view "$name@$version" dist.integrity 2>/dev/null)" == "$local_integrity" ]]
+}
+
 step "Checking whether $name@$version is on npm."
 versions_json=$(npm view "$name" versions --json) ||
 	stop "could not read $name from npm. Check your network, then retry."
@@ -87,6 +123,11 @@ if node -e '
 	process.exit(versions.includes(process.argv[2]) ? 0 : 1);
 ' "$versions_json" "$version"; then
 	step "Skipping the upload because $name@$version is already on npm."
+elif $dry_run; then
+	step "Running npm publish --dry-run, which uploads nothing."
+	RELEASE_MODE=true npm publish --dry-run
+	step "Dry run finished for $name@$version. Nothing was published, tagged or released."
+	exit 0
 else
 	step "Reading the npm token from the macOS Keychain."
 	token=$(security find-generic-password -s "$NPM_KEYCHAIN_SERVICE" -a "$NPM_KEYCHAIN_ACCOUNT" -w) ||
@@ -101,6 +142,20 @@ else
 	cleanup
 	npmrc=""
 fi
+
+if $dry_run; then
+	step "Dry run finished for $name@$version, which npm already has. Nothing was tagged or released."
+	exit 0
+fi
+
+step "Comparing the package npm serves with the local build."
+attempt=1
+until npm_matches_build; do
+	((attempt < 5)) || stop "npm serves $name@$version with another integrity than this build, or not yet. Compare them before you tag."
+	step "npm is not ready yet. Retrying in ${RELEASE_RETRY_SECONDS:-30} seconds."
+	sleep "${RELEASE_RETRY_SECONDS:-30}"
+	attempt=$((attempt + 1))
+done
 
 step "Creating and pushing the annotated tag $tag."
 git tag --annotate "$tag" --message "$name $version"

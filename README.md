@@ -48,7 +48,9 @@ Maintainers release from a local machine. The npm token stays in the macOS Keych
 NPM_KEYCHAIN_SERVICE=<service> NPM_KEYCHAIN_ACCOUNT=<account> bin/release-local
 ```
 
-It stops at once when either variable is unset. It runs on a clean `main` that matches `origin/main`. It runs `bin/check-local`, publishes the `package.json` version to npm, then pushes tag `v<version>` and creates its GitHub release. It skips the npm upload when that version is already published.
+It stops at once when either variable is unset. It runs on a clean `main` that matches `origin/main`. It runs `bin/check-local`, publishes the `package.json` version to npm, and checks that npm serves the same package it built. Only then it pushes tag `v<version>` and creates its GitHub release. It skips the npm upload when that version is already published.
+
+`bin/release-local --dry-run` runs every check and `npm publish --dry-run`. It reads no token and publishes, tags and releases nothing.
 
 ## Resources
 
