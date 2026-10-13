@@ -21,7 +21,7 @@
 		"type": "git",
 		"url": "https://github.com/Xquik-dev/n8n-nodes-xquik.git"
 	},
-	"packageManager": "npm@12.0.1+sha512.2f94fd8bf600416416a934bfc59c4991e8bff7372ef7d842784e2a8b8d48c81555ee645069ddea73625fb8e92dc261feab0188fd5dab6c22fefd46316f5f9140",
+	"packageManager": "npm@12.2.0+sha512.66c2632a94e796649738b2d7894d710c2cc2e1696893823066687f6b0d8a52e5f2b54eeaeaa32ffdc513ecca1e49ff794a5c2ec3f9515d879f1b3182b291cf35",
 	"publishConfig": {
 		"access": "public"
 	},
@@ -51,14 +51,14 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "9.29.0",
-		"@n8n/eslint-plugin-community-nodes": "0.29.0",
+		"@n8n/eslint-plugin-community-nodes": "0.35.1",
 		"eslint": "9.29.0",
 		"eslint-import-resolver-typescript": "4.4.5",
 		"eslint-plugin-import-x": "4.17.1",
 		"eslint-plugin-n8n-nodes-base": "2.0.0",
-		"n8n-workflow": "2.29.3",
+		"n8n-workflow": "2.42.4",
 		"typescript": "6.0.3",
-		"typescript-eslint": "8.67.0"
+		"typescript-eslint": "8.71.2"
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"

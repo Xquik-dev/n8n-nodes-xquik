@@ -33,7 +33,7 @@ export default tseslint.config(
 		},
 	},
 	{
-		files: ['package.json'],
+		files: ['package.json', '**/*.node.json'],
 		extends: [communityNodesRecommended],
 		rules: {
 			...n8nNodesBase.configs.community.rules,
