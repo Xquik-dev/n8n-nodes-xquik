@@ -73,8 +73,8 @@ gh auth status --hostname github.com >/dev/null 2>&1 || stop "run gh auth login 
 step "Running bin/check-local."
 bin/check-local
 
-step "Auditing dependencies for high or critical findings."
-npm audit --audit-level=high || stop "fix the high or critical findings first."
+step "Auditing all dependencies against the reviewed exceptions."
+node scripts/check-audit.mjs || stop "follow each Blocked line above first."
 
 step "Building the package."
 npm run build

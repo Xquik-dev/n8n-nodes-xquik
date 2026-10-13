@@ -114,9 +114,9 @@ run_check "audit of published dependencies" \
 	"Update the vulnerable runtime dependency, then retry." \
 	npm audit --omit=dev
 
-run_check "audit of development tools" \
-	"Update the development tool with the high or critical finding, then retry." \
-	npm audit --audit-level=high
+run_check "audit of all dependencies" \
+	"Follow each Blocked line above, then retry." \
+	node scripts/check-audit.mjs
 
 run_check "registry signatures" \
 	"Reinstall the flagged package from the npm registry, then retry." \

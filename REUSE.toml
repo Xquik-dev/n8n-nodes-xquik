@@ -7,6 +7,7 @@ version = 1
 path = [
   ".github/SECURITY.md",
   ".gitignore",
+  "audit-exceptions.json",
   "LICENSE",
   "*.md",
   "icons/*.svg",

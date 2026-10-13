@@ -1,0 +1,76 @@
+{
+	"exceptions": [
+		{
+			"advisory": "GHSA-vh66-26gq-q6x8",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-9fr6-4gfg-395g",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-c29m-xwm3-cm6r",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-mghh-pgcx-3jjj",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-x97p-jq2g-jp4f",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-3pq3-5fj3-cg6v",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-542g-h47m-68v8",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-j8rh-479h-cp32",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-4hqw-qxg8-jxx2",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-m8m8-qj5v-23w3",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-44g4-m2mj-wpvx",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		},
+		{
+			"advisory": "GHSA-r4gj-5m52-g5wh",
+			"package": "axios",
+			"reason": "n8n-workflow pins axios exactly, n8n provides it at run time, and this package ships no axios.",
+			"recheck": "2026-11-12"
+		}
+	]
+}
