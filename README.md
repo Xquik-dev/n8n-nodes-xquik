@@ -1,8 +1,12 @@
-# Xquik n8n Twitter Node
+# n8n Twitter node for Xquik
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
 
-Add read-only Twitter data to n8n: search tweets and users, read trends, check follows, and view Xquik credits.
+Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data. Xquik charges only for delivered, unique, filter-matching results and never pads rows.
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
+
+This n8n community node reads X data through Xquik. Search tweets & users, read trends, check follows & view your Xquik credits.
 
 ## Operations
 
@@ -10,7 +14,7 @@ Add read-only Twitter data to n8n: search tweets and users, read trends, check f
 | --- | --- | --- |
 | Search tweets | Tweet: search | `GET /x/tweets/search` |
 | Search users | User: search | `GET /x/users/search` |
-| Read regional trends | Trend: get | `GET /x/trends` |
+| Read regional trends | Trend: get many | `GET /trends` |
 | Check whether one account follows another | Follow: check | `GET /x/followers/check` |
 | View available credits | Account: get credits | `GET /credits` |
 
@@ -54,5 +58,3 @@ It stops at once when either variable is unset. It runs on a clean `main` that m
 - [Organization support policy](https://github.com/Xquik-dev/.github/blob/main/SUPPORT.md)
 - [Organization security policy](https://github.com/Xquik-dev/.github/blob/main/SECURITY.md)
 - [Contribution guide](https://github.com/Xquik-dev/.github/blob/main/CONTRIBUTING.md)
-
-Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.

@@ -1,17 +1,21 @@
 {
 	"name": "n8n-nodes-xquik",
-	"version": "0.1.6",
-	"description": "n8n Twitter node for tweet search, user lookup, trends, and follow checks through Xquik. Not affiliated with X Corp.",
+	"version": "0.1.7",
+	"description": "Xquik's n8n Twitter node searches tweets & users, reads trends & checks follows. Not affiliated with X Corp.",
 	"license": "MIT",
 	"homepage": "https://github.com/Xquik-dev/n8n-nodes-xquik",
 	"keywords": [
 		"n8n-community-node-package",
 		"n8n",
+		"n8n-twitter",
+		"n8n-twitter-scraper",
+		"n8n-twitter-api",
+		"n8n-twitter-node",
+		"n8n-x-node",
 		"xquik",
 		"twitter-api",
 		"twitter-search",
-		"tweet-search",
-		"n8n-twitter-node"
+		"tweet-search"
 	],
 	"author": {
 		"name": "Xquik",
