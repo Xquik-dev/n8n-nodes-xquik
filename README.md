@@ -10,13 +10,13 @@ This n8n community node reads X data through Xquik. Search tweets & users, read 
 
 ## Operations
 
-| Task | n8n operation | Xquik route |
-| --- | --- | --- |
-| Search tweets | Tweet: search | `GET /x/tweets/search` |
-| Search users | User: search | `GET /x/users/search` |
-| Read regional trends | Trend: get many | `GET /trends` |
-| Check whether one account follows another | Follow: check | `GET /x/followers/check` |
-| View available credits | Account: get credits | `GET /credits` |
+| Task | Resource | Operation | Xquik route |
+| --- | --- | --- | --- |
+| Search tweets | Tweet | Search | `GET /x/tweets/search` |
+| Search users | User | Search | `GET /x/users/search` |
+| Read regional trends | Trend | Get Many | `GET /trends` |
+| Check whether one account follows another | Follow | Check | `GET /x/followers/check` |
+| View available credits | Account | Get Credits | `GET /credits` |
 
 Use the [Xquik API](https://docs.xquik.com/api-reference/overview) for full follower exports or approved posting.
 
@@ -42,7 +42,7 @@ It installs from the lockfile, builds, type checks, tests, lints, audits depende
 
 ## Release
 
-Maintainers release from a local machine. The npm token stays in the macOS Keychain. 2 environment variables name its Keychain item:
+Maintainers release from a local machine. The npm token stays in the macOS Keychain. 2 environment variables name its Keychain item.
 
 ```sh
 NPM_KEYCHAIN_SERVICE=<service> NPM_KEYCHAIN_ACCOUNT=<account> bin/release-local

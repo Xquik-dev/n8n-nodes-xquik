@@ -24,7 +24,7 @@ export class Xquik implements INodeType {
 		},
 		group: ['transform'],
 		version: 1,
-		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
+		subtitle: '={{$parameter["operation"] + " " + $parameter["resource"]}}',
 		description: 'Search tweets and users, read trends, check follows, and view Xquik credits. Not affiliated with X Corp.',
 		defaults: {
 			name: 'Xquik',
