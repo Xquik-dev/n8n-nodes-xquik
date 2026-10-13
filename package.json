@@ -1,7 +1,7 @@
 {
 	"name": "n8n-nodes-xquik",
 	"version": "0.1.7",
-	"description": "Xquik's n8n Twitter node searches tweets & users, reads trends & checks follows. Not affiliated with X Corp.",
+	"description": "n8n Twitter node by Xquik. Search tweets & users, read trends & check follows. Not affiliated with X Corp.",
 	"license": "MIT",
 	"homepage": "https://github.com/Xquik-dev/n8n-nodes-xquik",
 	"keywords": [
