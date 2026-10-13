@@ -38,7 +38,7 @@ Create an Xquik API key and add it to the Xquik API credential in n8n. The node 
 bin/check-local
 ```
 
-It installs from the lockfile, builds, type checks, tests, lints, audits dependencies, verifies registry signatures, and checks reproducible package bytes. Tests enforce 100% coverage and check request contracts. It also checks REUSE 3.3 metadata with a pinned `reuse`, which `uvx` runs, so install uv first. It stops at the first failure and says what to fix. The audit covers every dependency at every severity. A development finding passes only through a reviewed entry in `audit-exceptions.json`, with a recheck date at most 30 days out. When the tree is clean and the commit is on GitHub, it posts the result as the `xquik-local-checks` commit status. Pass `--no-status` to skip that.
+It installs from the lockfile, builds, type checks, tests, lints, audits dependencies, verifies registry signatures, and checks reproducible package bytes. Tests enforce 100% coverage and check request contracts. It also checks REUSE 3.3 metadata with a pinned `reuse`, which `uvx` runs, so install uv first. Last, it runs CodeQL's security-extended queries and fails on any result, so install CodeQL with `brew install --cask codeql`. It stops at the first failure and says what to fix. The audit covers every dependency at every severity. A development finding passes only through a reviewed entry in `audit-exceptions.json`, with a recheck date at most 30 days out. When the tree is clean and the commit is on GitHub, it posts the result as the `xquik-local-checks` commit status. Pass `--no-status` to skip that.
 
 ## Release
 

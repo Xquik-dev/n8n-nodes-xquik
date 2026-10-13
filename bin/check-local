@@ -4,7 +4,8 @@
 #
 # Runs every check a change must pass before it lands or ships.
 # Stops at the first failure and says what to do next.
-# REUSE runs at a pinned version through uv.
+# REUSE runs at a pinned version through uv. CodeQL runs the security-extended
+# queries that the removed CodeQL workflow ran.
 # Reports the result as the xquik-local-checks commit status on GitHub
 # when the tree is clean and the commit is pushed. Pass --no-status to skip it.
 
@@ -57,7 +58,7 @@ current_check=""
 report_result() {
 	local exit_status=$?
 	if ((exit_status == 0)); then
-		send_status success "REUSE, install, build, types, tests, lint, audits, signatures, reproducible package & pack passed"
+		send_status success "REUSE, install, build, types, tests, lint, audits, signatures, reproducible package, pack & CodeQL passed"
 	elif [[ -z $current_check ]]; then
 		send_status failure "Stopped before the checks finished."
 	elif ((exit_status == 130)); then
@@ -128,5 +129,9 @@ run_check "reproducible package" \
 run_check "package contents" \
 	"Fix the files list in package.json." \
 	npm pack --dry-run
+
+run_check "CodeQL" \
+	"Fix each CodeQL result above. Install CodeQL with brew install --cask codeql if it is missing." \
+	bash scripts/codeql-security
 
 printf 'All checks passed.\n'
