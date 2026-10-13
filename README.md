@@ -38,13 +38,13 @@ It installs from the lockfile, builds, type checks, tests, lints, audits depende
 
 ## Release
 
-Maintainers release from a local machine:
+Maintainers release from a local machine. The npm token stays in the macOS Keychain. 2 environment variables name its Keychain item:
 
 ```sh
-bin/release-local
+NPM_KEYCHAIN_SERVICE=<service> NPM_KEYCHAIN_ACCOUNT=<account> bin/release-local
 ```
 
-It runs on a clean `main` that matches `origin/main`. It runs `bin/check-local`, publishes the `package.json` version to npm, then pushes tag `v<version>` and creates its GitHub release. It skips the npm upload when that version is already published.
+It stops at once when either variable is unset. It runs on a clean `main` that matches `origin/main`. It runs `bin/check-local`, publishes the `package.json` version to npm, then pushes tag `v<version>` and creates its GitHub release. It skips the npm upload when that version is already published.
 
 ## Resources
 

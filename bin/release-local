@@ -5,13 +5,12 @@
 # Publishes the version in package.json to npm from this machine,
 # then tags it and creates its GitHub release.
 # The npm token comes from the macOS Keychain and never touches the repository.
+# NPM_KEYCHAIN_SERVICE and NPM_KEYCHAIN_ACCOUNT name the Keychain item that holds it.
 
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-readonly keychain_service="npm"
-readonly keychain_account="burakbayir"
 readonly registry_host="registry.npmjs.org"
 
 npmrc=""
@@ -32,6 +31,11 @@ stop() {
 	printf 'Release stopped: %s\n' "$1" >&2
 	exit 1
 }
+
+[[ -n "${NPM_KEYCHAIN_SERVICE:-}" ]] ||
+	stop "set NPM_KEYCHAIN_SERVICE to the service of the Keychain item that holds the npm token."
+[[ -n "${NPM_KEYCHAIN_ACCOUNT:-}" ]] ||
+	stop "set NPM_KEYCHAIN_ACCOUNT to the account of the Keychain item that holds the npm token."
 
 step "Checking that the working tree is clean."
 [[ -z "$(git status --porcelain)" ]] || stop "commit or remove local changes first."
@@ -85,8 +89,8 @@ if node -e '
 	step "Skipping the upload because $name@$version is already on npm."
 else
 	step "Reading the npm token from the macOS Keychain."
-	token=$(security find-generic-password -s "$keychain_service" -a "$keychain_account" -w) ||
-		stop "add the npm token to the Keychain as service $keychain_service, account $keychain_account."
+	token=$(security find-generic-password -s "$NPM_KEYCHAIN_SERVICE" -a "$NPM_KEYCHAIN_ACCOUNT" -w) ||
+		stop "check NPM_KEYCHAIN_SERVICE & NPM_KEYCHAIN_ACCOUNT, or add the npm token to the Keychain item they name."
 	npmrc=$(mktemp)
 	chmod 600 "$npmrc"
 	printf 'registry=https://%s/\n//%s/:_authToken=%s\n' "$registry_host" "$registry_host" "$token" >"$npmrc"
