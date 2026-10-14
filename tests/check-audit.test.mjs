@@ -31,8 +31,6 @@ function listed(overrides = {}) {
 	};
 }
 
-// Shapes findings as npm audit --json does. A package lists its advisories under "via",
-// and a package that depends on it lists that package's name there.
 function auditReport(findings) {
 	const vulnerabilities = {};
 	for (const { id, name, severity, fixAvailable } of findings) {
@@ -43,8 +41,6 @@ function auditReport(findings) {
 	return JSON.stringify({ auditReportVersion: 2, vulnerabilities });
 }
 
-// Answers npm audit from audit.json, or from production-audit.json for --omit=dev.
-// It exits 1 when it reports a finding, as npm does.
 const fakeNpm = `#!/usr/bin/env node
 const { readFileSync } = require('node:fs');
 const file = process.argv.includes('--omit=dev') ? 'production-audit.json' : 'audit.json';

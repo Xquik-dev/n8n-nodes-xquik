@@ -1,12 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Xquik Contributors
 // SPDX-License-Identifier: MIT
 
-// Audits every dependency at every severity and blocks on each finding.
-// A finding passes only while audit-exceptions.json lists its advisory and package
-// with a recheck date from today to 30 days out. A finding in the production tree,
-// or one that npm audit fix resolves, blocks even when listed. So does an exception
-// that matches no finding. Pass a directory to audit it instead of this repository.
-
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -33,14 +27,12 @@ const entryRules = [
 	},
 ];
 
-// Each line names an advisory or an exception and the next step. Any line fails the audit.
 const problems = [];
 
 function isoDay(offsetDays) {
 	return new Date(Date.now() + offsetDays * dayMs).toISOString().slice(0, 10);
 }
 
-// Returns the valid entries of the exceptions file and blocks on each invalid one.
 function loadExceptions() {
 	const file = join(root, exceptionsFile);
 	if (!existsSync(file)) {
@@ -60,7 +52,6 @@ function loadExceptions() {
 	});
 }
 
-// Runs npm audit and returns its advisories by ID.
 function auditAdvisories(extraArgs) {
 	const result = spawnSync('npm', ['audit', '--json', ...extraArgs], {
 		cwd: root,
@@ -84,7 +75,6 @@ function auditAdvisories(extraArgs) {
 
 	const advisories = new Map();
 	for (const { via, fixAvailable } of Object.values(report.vulnerabilities)) {
-		// A string names another package whose advisories reach this one. That package lists them.
 		for (const advisory of via.filter((item) => typeof item !== 'string')) {
 			const id = advisory.url.split('/').at(-1);
 			advisories.set(id, {

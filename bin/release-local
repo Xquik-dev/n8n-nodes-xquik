@@ -1,15 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-FileCopyrightText: 2026 Xquik Contributors
 # SPDX-License-Identifier: MIT
-#
-# Publishes the version in package.json to npm from this machine,
-# then tags it and creates its GitHub release.
-# Usage: bin/release-local [--dry-run]
-# The npm token comes from the macOS Keychain and never touches the repository.
-# NPM_KEYCHAIN_SERVICE and NPM_KEYCHAIN_ACCOUNT name the Keychain item that holds it.
-# --dry-run runs every check and npm publish --dry-run, and stops before the
-# upload, the tag and the GitHub release. It reads no token, so it needs neither
-# variable, and it runs on any clean commit.
 
 set -euo pipefail
 
@@ -110,7 +101,6 @@ local_integrity=$(npm pack --dry-run --json --ignore-scripts | node -e '
 	});
 ') || stop "npm pack could not read the package. Fix the error above, then retry."
 
-# Succeeds when npm serves the version with the integrity of the local package.
 npm_matches_build() {
 	[[ "$(npm view "$name@$version" dist.integrity 2>/dev/null)" == "$local_integrity" ]]
 }
