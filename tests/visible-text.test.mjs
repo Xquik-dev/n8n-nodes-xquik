@@ -7,8 +7,6 @@ import test from 'node:test';
 import { XquikApi } from '../dist/credentials/XquikApi.credentials.js';
 import { Xquik } from '../dist/nodes/Xquik/Xquik.node.js';
 
-// A colon or semicolon punctuates text when a space or the end follows it.
-// URLs, times and the file: icon protocol put another character after it.
 const PUNCTUATION = /[:;](\s|$)/;
 
 function listStrings(value) {

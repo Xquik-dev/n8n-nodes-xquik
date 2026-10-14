@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-FileCopyrightText: 2026 Xquik Contributors
 # SPDX-License-Identifier: MIT
-#
-# Analyzes the JavaScript and TypeScript source with CodeQL's security-extended
-# queries, as the removed CodeQL workflow did, and fails on any result.
-# Usage: scripts/codeql-security [--version]
-# --version checks the CodeQL CLI and prints its version without analyzing.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 minimum_version=2.27.0
@@ -27,7 +22,6 @@ fi
 echo "CodeQL CLI $version"
 report="$(mktemp -d "${TMPDIR:-/tmp}/n8n-xquik-codeql.XXXXXX")"
 trap 'rm -rf -- "${report:?}"' EXIT
-# Build output and installed packages are not source.
 printf 'paths-ignore:\n  - dist\n  - node_modules\n  - coverage\n' >"$report/config.yml"
 "$codeql" database create "$report/database" --language=javascript-typescript --build-mode=none \
 	--source-root="$PWD" --codescanning-config="$report/config.yml" --threads=2

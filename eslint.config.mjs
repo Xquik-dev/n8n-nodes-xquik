@@ -8,11 +8,18 @@ import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescrip
 import importPlugin from 'eslint-plugin-import-x';
 import n8nNodesBase from 'eslint-plugin-n8n-nodes-base';
 import tseslint from 'typescript-eslint';
+import noCodeComments from './scripts/no-code-comments.mjs';
 
 const communityNodesRecommended = n8nCommunityNodesPlugin.configs.recommended;
 
 export default tseslint.config(
 	globalIgnores(['dist']),
+	{
+		files: ['**/*.ts', '**/*.mjs'],
+		languageOptions: { parser: tseslint.parser },
+		plugins: { xquik: { rules: { 'no-code-comments': noCodeComments } } },
+		rules: { 'xquik/no-code-comments': 'error' },
+	},
 	{
 		files: ['**/*.ts'],
 		extends: [

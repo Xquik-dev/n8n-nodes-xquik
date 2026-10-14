@@ -1,9 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Xquik Contributors
 // SPDX-License-Identifier: MIT
 
-// Fails unless the SARIF report shows 1 complete CodeQL run with no results.
-// Usage: node scripts/verify-codeql.mjs <report.sarif>
-
 import { readFile } from 'node:fs/promises';
 
 const EXTRACTED_FILES = 'js/diagnostics/successfully-extracted-files';

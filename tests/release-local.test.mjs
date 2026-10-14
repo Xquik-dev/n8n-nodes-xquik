@@ -12,7 +12,6 @@ import { fileURLToPath } from 'node:url';
 const script = fileURLToPath(new URL('../bin/release-local', import.meta.url));
 const TOKEN = 'npm_isolated_fixture_token';
 
-// Each fake records its call in the events file. CASE picks the state they report.
 const FAKES = {
 	git: `case "$1" in
   status) [ "$CASE" != dirty ] || echo ' M README.md' ;;
