@@ -5,54 +5,78 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { z } from 'zod/v4';
 
 const root = resolve(process.argv[2] ?? fileURLToPath(new URL('..', import.meta.url)));
 const exceptionsFile = 'audit-exceptions.json';
 const maxRecheckDays = 30;
 const dayMs = 24 * 60 * 60 * 1000;
 
-const isText = (value) => typeof value === 'string' && value.trim() !== '';
-const entryRules = [
-	{
-		field: 'advisory',
-		needs: 'an "advisory" like GHSA-xxxx-xxxx-xxxx',
-		isValid: (value) => /^GHSA(-[0-9a-z]{4}){3}$/.test(value),
-	},
-	{ field: 'package', needs: 'a "package" that names the vulnerable package', isValid: isText },
-	{ field: 'reason', needs: 'a "reason" that says why the finding is acceptable', isValid: isText },
-	{
-		field: 'recheck',
-		needs: 'a "recheck" date like 2026-11-12',
-		isValid: (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value)),
-	},
-];
+const text = z.string().refine((value) => value.trim() !== '');
+const exceptionEntry = z.object({
+	advisory: z.string().regex(/^GHSA(-[0-9a-z]{4}){3}$/u),
+	package: text,
+	reason: text,
+	recheck: z
+		.string()
+		.regex(/^\d{4}-\d{2}-\d{2}$/u)
+		.refine((value) => !Number.isNaN(Date.parse(value))),
+});
+type Exception = z.infer<typeof exceptionEntry>;
 
-const problems = [];
+const entryNeeds: Readonly<Record<keyof Exception, string>> = {
+	advisory: 'an "advisory" like GHSA-xxxx-xxxx-xxxx',
+	package: 'a "package" that names the vulnerable package',
+	reason: 'a "reason" that says why the finding is acceptable',
+	recheck: 'a "recheck" date like 2026-11-12',
+};
+const exceptionsList = z.object({ exceptions: z.array(z.unknown()) });
+const auditReport = z.object({
+	vulnerabilities: z.record(
+		z.string(),
+		z.object({
+			via: z.array(z.union([z.string(), z.object({ url: z.string(), name: z.string(), severity: z.string() })])),
+			fixAvailable: z.unknown(),
+		}),
+	),
+});
 
-function isoDay(offsetDays) {
+const problems: string[] = [];
+
+function isoDay(offsetDays: number): string {
 	return new Date(Date.now() + offsetDays * dayMs).toISOString().slice(0, 10);
 }
 
-function loadExceptions() {
+function parseJson(source: string): unknown {
+	try {
+		return JSON.parse(source);
+	} catch {
+		return undefined;
+	}
+}
+
+function loadExceptions(): Exception[] {
 	const file = join(root, exceptionsFile);
 	if (!existsSync(file)) {
 		return [];
 	}
-	const { exceptions } = JSON.parse(readFileSync(file, 'utf8'));
-	if (!Array.isArray(exceptions)) {
+	const listed = exceptionsList.safeParse(JSON.parse(readFileSync(file, 'utf8')));
+	if (!listed.success) {
 		problems.push(`${exceptionsFile} needs an "exceptions" array. Add one, even if it is empty.`);
 		return [];
 	}
-	return exceptions.filter((entry, index) => {
-		const broken = entryRules.find(({ field, isValid }) => !isValid(entry?.[field]));
-		if (broken) {
-			problems.push(`${exceptionsFile} entry ${index + 1} needs ${broken.needs}.`);
+	return listed.data.exceptions.flatMap((entry, index) => {
+		const parsed = exceptionEntry.safeParse(entry);
+		if (parsed.success) {
+			return [parsed.data];
 		}
-		return !broken;
+		const field = exceptionEntry.keyof().catch('advisory').parse(parsed.error.issues[0].path[0]);
+		problems.push(`${exceptionsFile} entry ${index + 1} needs ${entryNeeds[field]}.`);
+		return [];
 	});
 }
 
-function auditAdvisories(extraArgs) {
+function auditAdvisories(extraArgs: readonly string[]): Map<string, { label: string; package: string; fixable: boolean }> {
 	const result = spawnSync('npm', ['audit', '--json', ...extraArgs], {
 		cwd: root,
 		encoding: 'utf8',
@@ -61,22 +85,20 @@ function auditAdvisories(extraArgs) {
 	if (result.error) {
 		throw result.error;
 	}
-	let report;
-	try {
-		report = JSON.parse(result.stdout);
-	} catch {
-		report = undefined;
-	}
-	if (typeof report?.vulnerabilities !== 'object' || report.vulnerabilities === null) {
+	const report = auditReport.safeParse(parseJson(result.stdout));
+	if (!report.success) {
 		process.stderr.write(result.stderr);
 		console.error('npm audit returned no report. Run npm audit to see why.');
 		process.exit(1);
 	}
 
-	const advisories = new Map();
-	for (const { via, fixAvailable } of Object.values(report.vulnerabilities)) {
-		for (const advisory of via.filter((item) => typeof item !== 'string')) {
-			const id = advisory.url.split('/').at(-1);
+	const advisories = new Map<string, { label: string; package: string; fixable: boolean }>();
+	for (const { via, fixAvailable } of Object.values(report.data.vulnerabilities)) {
+		for (const advisory of via) {
+			if (typeof advisory === 'string') {
+				continue;
+			}
+			const id = advisory.url.slice(advisory.url.lastIndexOf('/') + 1);
 			advisories.set(id, {
 				label: `${id} ${advisory.name} (${advisory.severity})`,
 				package: advisory.name,
@@ -87,7 +109,7 @@ function auditAdvisories(extraArgs) {
 	return advisories;
 }
 
-const accepted = [];
+const accepted: string[] = [];
 const today = isoDay(0);
 const latestRecheck = isoDay(maxRecheckDays);
 const exceptions = loadExceptions();
@@ -96,7 +118,9 @@ const production = auditAdvisories(['--omit=dev']);
 
 for (const [id, { label, package: packageName, fixable }] of new Map([...auditAdvisories([]), ...production])) {
 	const exception = exceptions.find((entry) => entry.advisory === id && entry.package === packageName);
-	unmatched.delete(exception);
+	if (exception !== undefined) {
+		unmatched.delete(exception);
+	}
 
 	if (production.has(id)) {
 		problems.push(`${label} reaches the production tree. Upgrade the dependency that brings it.`);

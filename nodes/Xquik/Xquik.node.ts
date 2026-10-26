@@ -7,10 +7,21 @@ import type {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	NodeParameterValue,
+	NodeParameterValueType,
 } from 'n8n-workflow';
 import { NodeApiError, NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
-import { addOptionalParameter, xquikApiRequest } from './GenericFunctions';
+import { addOptionalParameter, xquikApiRequest, type XquikRequestContext } from './GenericFunctions';
+
+type XquikExecuteContext = XquikRequestContext &
+	Pick<IExecuteFunctions, 'continueOnFail' | 'getInputData'> & {
+		readonly getNodeParameter: (
+			parameterName: string,
+			itemIndex: number,
+			fallbackValue?: NodeParameterValue,
+		) => NodeParameterValueType | object;
+	};
 
 const UNKNOWN_ERROR = 'Request failed. Review the input and retry.';
 
@@ -349,7 +360,7 @@ export class Xquik implements INodeType {
 		],
 	};
 
-	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+	async execute(this: XquikExecuteContext): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
 
@@ -384,17 +395,17 @@ export class Xquik implements INodeType {
 	}
 }
 
-function rethrowExecutionError(this: IExecuteFunctions, error: unknown, itemIndex: number): never {
+function rethrowExecutionError(this: XquikExecuteContext, error: unknown, itemIndex: number): never {
 	if (error instanceof NodeApiError || error instanceof NodeOperationError) {
 		throw error;
 	}
 
-	throw new NodeOperationError(this.getNode(), error as Error, { itemIndex });
+	throw new NodeOperationError(this.getNode(), error instanceof Error ? error : String(error), { itemIndex });
 }
 
-async function executeItem(this: IExecuteFunctions, itemIndex: number): Promise<IDataObject> {
-	const resource = this.getNodeParameter('resource', itemIndex) as string;
-	const operation = this.getNodeParameter('operation', itemIndex) as string;
+async function executeItem(this: XquikExecuteContext, itemIndex: number): Promise<IDataObject> {
+	const resource = this.getNodeParameter('resource', itemIndex);
+	const operation = this.getNodeParameter('operation', itemIndex);
 
 	if (resource === 'account' && operation === 'getCredits') {
 		return await xquikApiRequest.call(this, 'GET', '/credits');
@@ -406,19 +417,12 @@ async function executeItem(this: IExecuteFunctions, itemIndex: number): Promise<
 			queryType: this.getNodeParameter('queryType', itemIndex),
 			limit: this.getNodeParameter('limit', itemIndex),
 		};
-		const cursor = this.getNodeParameter('cursor', itemIndex) as string;
-		const additionalFields = this.getNodeParameter('additionalFields', itemIndex) as IDataObject;
-
-		addOptionalParameter(query, 'cursor', cursor);
-		addOptionalParameter(query, 'fromUser', additionalFields.fromUser as string | undefined);
-		addOptionalParameter(query, 'language', additionalFields.lang as string | undefined);
-		addOptionalParameter(query, 'sinceTime', additionalFields.sinceTime as string | undefined);
-		addOptionalParameter(query, 'untilTime', additionalFields.untilTime as string | undefined);
-		addOptionalParameter(
-			query,
-			'verifiedOnly',
-			additionalFields.verifiedOnly as boolean | undefined,
-		);
+		addOptionalParameter(query, 'cursor', this.getNodeParameter('cursor', itemIndex));
+		addOptionalParameter(query, 'fromUser', this.getNodeParameter('additionalFields.fromUser', itemIndex, ''));
+		addOptionalParameter(query, 'language', this.getNodeParameter('additionalFields.lang', itemIndex, ''));
+		addOptionalParameter(query, 'sinceTime', this.getNodeParameter('additionalFields.sinceTime', itemIndex, ''));
+		addOptionalParameter(query, 'untilTime', this.getNodeParameter('additionalFields.untilTime', itemIndex, ''));
+		addOptionalParameter(query, 'verifiedOnly', this.getNodeParameter('additionalFields.verifiedOnly', itemIndex, ''));
 
 		return await xquikApiRequest.call(this, 'GET', '/x/tweets/search', query);
 	}
@@ -427,9 +431,7 @@ async function executeItem(this: IExecuteFunctions, itemIndex: number): Promise<
 		const query: IDataObject = {
 			q: this.getNodeParameter('query', itemIndex),
 		};
-		const cursor = this.getNodeParameter('cursor', itemIndex) as string;
-
-		addOptionalParameter(query, 'cursor', cursor);
+		addOptionalParameter(query, 'cursor', this.getNodeParameter('cursor', itemIndex));
 
 		return await xquikApiRequest.call(this, 'GET', '/x/users/search', query);
 	}

@@ -106,7 +106,7 @@ run_check "audit of published dependencies" \
 
 run_check "audit of all dependencies" \
 	"Follow each Blocked line above, then retry." \
-	node scripts/check-audit.mjs
+	node scripts/check-audit.mts
 
 run_check "registry signatures" \
 	"Reinstall the flagged package from the npm registry, then retry." \

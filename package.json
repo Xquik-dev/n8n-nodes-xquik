@@ -30,15 +30,15 @@
 		"access": "public"
 	},
 	"scripts": {
-		"build": "npm run clean && tsc && npm run copy-assets",
-		"build:watch": "tsc --watch",
-		"check:reproducible": "node scripts/check-reproducible.mjs",
-		"clean": "node scripts/clean.mjs",
-		"copy-assets": "node scripts/copy-assets.mjs",
-		"lint": "eslint .",
-		"lint:fix": "eslint . --fix",
-		"test": "npm run build && node --test --experimental-test-coverage --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-include='dist/credentials/**/*.js' --test-coverage-include='dist/nodes/**/*.js' --test-coverage-lines=100 tests/*.test.mjs",
-		"prepublishOnly": "npm test && node scripts/verify-release.mjs"
+		"build": "npm run clean && tsc -p tsconfig.build.json && npm run copy-assets",
+		"build:watch": "tsc -p tsconfig.build.json --watch",
+		"check:reproducible": "node scripts/check-reproducible.mts",
+		"clean": "node scripts/clean.mts",
+		"copy-assets": "node scripts/copy-assets.mts",
+		"lint": "npm run build && eslint --flag unstable_native_nodejs_ts_config --max-warnings 0 . && type-coverage -p tsconfig.json --strict --at-least 100",
+		"lint:fix": "npm run build && eslint --flag unstable_native_nodejs_ts_config --max-warnings 0 . --fix",
+		"test": "npm run build && tsc -p tsconfig.json && node --test --experimental-test-coverage --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-include='dist/credentials/**/*.js' --test-coverage-include='dist/nodes/**/*.js' --test-coverage-lines=100 tests/*.test.mts",
+		"prepublishOnly": "npm test && node scripts/verify-release.mts"
 	},
 	"files": [
 		"dist"
@@ -55,14 +55,29 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "9.29.0",
+		"@langchain/core": "1.2.8",
+		"@n8n/config": "2.42.0",
 		"@n8n/eslint-plugin-community-nodes": "0.35.1",
+		"@sentry/node": "10.70.0",
+		"@types/express": "5.0.6",
+		"@types/luxon": "3.2.0",
+		"@types/node": "24.10.1",
+		"@types/semver": "7.7.1",
+		"@types/ssh2": "1.15.0",
+		"@typescript-eslint/type-utils": "8.71.2",
+		"@typescript-eslint/utils": "8.71.2",
 		"eslint": "9.29.0",
 		"eslint-import-resolver-typescript": "4.4.5",
 		"eslint-plugin-import-x": "4.17.1",
 		"eslint-plugin-n8n-nodes-base": "2.0.0",
+		"globals": "17.13.0",
 		"n8n-workflow": "2.44.1",
+		"nock": "14.0.14",
+		"type-coverage": "2.30.4",
+		"type-fest": "5.10.0",
 		"typescript": "6.0.3",
-		"typescript-eslint": "8.71.2"
+		"typescript-eslint": "8.71.2",
+		"zod": "3.25.76"
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"

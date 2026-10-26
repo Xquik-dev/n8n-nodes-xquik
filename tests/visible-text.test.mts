@@ -9,14 +9,14 @@ import { Xquik } from '../dist/nodes/Xquik/Xquik.node.js';
 
 const PUNCTUATION = /[:;](\s|$)/;
 
-function listStrings(value) {
+function listStrings(value: unknown): string[] {
 	if (typeof value === 'string') {
 		return [value];
 	}
 	if (value === null || typeof value !== 'object') {
 		return [];
 	}
-	return Object.values(value).flatMap(listStrings);
+	return Object.values(value).flatMap((entry: unknown) => listStrings(entry));
 }
 
 const subjects = [

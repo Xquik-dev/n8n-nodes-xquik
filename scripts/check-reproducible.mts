@@ -8,7 +8,7 @@ import { mkdir, mkdtemp, readdir, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 
-function runNpm(args) {
+function runNpm(args: readonly string[]): void {
 	const result = spawnSync('npm', args, { stdio: 'inherit' });
 	if (result.error !== undefined) {
 		throw result.error;
@@ -18,8 +18,8 @@ function runNpm(args) {
 	}
 }
 
-async function hashFiles(root, current = root) {
-	const hashes = [];
+async function hashFiles(root: string, current = root): Promise<[string, string][]> {
+	const hashes: [string, string][] = [];
 	const entries = await readdir(current, { withFileTypes: true });
 	entries.sort((left, right) => left.name.localeCompare(right.name));
 

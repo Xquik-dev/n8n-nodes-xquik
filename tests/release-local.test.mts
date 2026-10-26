@@ -3,13 +3,14 @@
 
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import test from 'node:test';
+import test, { type TestContext } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-const script = fileURLToPath(new URL('../bin/release-local', import.meta.url));
+const root = fileURLToPath(new URL('..', import.meta.url));
+const script = join(root, 'bin/release-local');
 const TOKEN = 'npm_isolated_fixture_token';
 
 const FAKES = {
@@ -51,16 +52,25 @@ echo "$EXPECTED_TOKEN"`,
 	sleep: 'echo "sleep $1" >> "$EVENTS"',
 };
 
-function release(t, { args = [], testCase = 'ready', env = { NPM_KEYCHAIN_SERVICE: 'test-service', NPM_KEYCHAIN_ACCOUNT: 'test-account' } } = {}) {
+function release(
+	t: TestContext,
+	{
+		args = [],
+		testCase = 'ready',
+		env = { NPM_KEYCHAIN_SERVICE: 'test-service', NPM_KEYCHAIN_ACCOUNT: 'test-account' },
+	}: { args?: readonly string[]; testCase?: string; env?: Readonly<Record<string, string>> } = {},
+): { events: string[]; last: string | undefined; status: number | null } {
 	const folder = mkdtempSync(join(tmpdir(), 'n8n-xquik-release-test-'));
 	t.after(() => rmSync(folder, { force: true, recursive: true }));
 	const project = join(folder, 'project');
 	const fakes = join(folder, 'fakes');
 	for (const path of [join(project, 'bin'), join(project, 'scripts'), fakes]) mkdirSync(path, { recursive: true });
 	copyFileSync(script, join(project, 'bin/release-local'));
+	for (const helper of ['scripts/npm-has-version.mts', 'scripts/pack-integrity.mts']) copyFileSync(join(root, helper), join(project, helper));
+	symlinkSync(join(root, 'node_modules'), join(project, 'node_modules'));
 	writeFileSync(join(project, 'package.json'), JSON.stringify({ name: 'n8n-nodes-xquik', version: '1.2.3' }));
 	writeFileSync(join(project, 'bin/check-local'), '#!/bin/sh\necho checks >> "$EVENTS"\n', { mode: 0o755 });
-	writeFileSync(join(project, 'scripts/check-audit.mjs'), 'import { appendFileSync } from "node:fs";\nappendFileSync(process.env.EVENTS, "audit\\n");\n');
+	writeFileSync(join(project, 'scripts/check-audit.mts'), 'import { appendFileSync } from "node:fs";\nappendFileSync(process.env.EVENTS, "audit\\n");\n');
 	for (const [name, body] of Object.entries(FAKES)) writeFileSync(join(fakes, name), `#!/bin/sh\n${body}\n`, { mode: 0o755 });
 	const events = join(folder, 'events');
 	const npmrcPath = join(folder, 'npmrc-path');
@@ -105,7 +115,7 @@ for (const [testCase, events, last] of [
 	['ready', [...CHECKED, 'publish dry run with RELEASE_MODE=true'], 'Dry run finished for n8n-nodes-xquik@1.2.3. Nothing was published, tagged or released.'],
 	['published', CHECKED, 'Dry run finished for n8n-nodes-xquik@1.2.3, which npm already has. Nothing was tagged or released.'],
 	['branch', [...CHECKED, 'publish dry run with RELEASE_MODE=true'], 'Dry run finished for n8n-nodes-xquik@1.2.3. Nothing was published, tagged or released.'],
-]) {
+] as const) {
 	test(`a dry run in state ${testCase} reads no token and releases nothing`, (t) => {
 		const result = release(t, { args: ['--dry-run'], env: {}, testCase });
 		assert.equal(result.status, 0, result.last);
@@ -130,7 +140,7 @@ for (const [name, options, status, last] of [
 	['another branch', { testCase: 'branch' }, 1, 'Release stopped: switch to main first.'],
 	['a main behind origin', { testCase: 'behind' }, 1, 'Release stopped: pull or push until main matches origin/main.'],
 	['an unknown option', { args: ['--publish'] }, 2, 'Unknown option --publish. Run bin/release-local or bin/release-local --dry-run.'],
-]) {
+] as const) {
 	test(`${name} stops before any upload`, (t) => {
 		const result = release(t, options);
 		assert.equal(result.status, status);
