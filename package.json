@@ -66,7 +66,7 @@
 		"@types/ssh2": "1.15.0",
 		"@typescript-eslint/type-utils": "8.71.2",
 		"@typescript-eslint/utils": "8.71.2",
-		"eslint": "9.29.0",
+		"eslint": "10.13.0",
 		"eslint-import-resolver-typescript": "4.4.5",
 		"eslint-plugin-import-x": "4.17.1",
 		"eslint-plugin-n8n-nodes-base": "2.0.0",
