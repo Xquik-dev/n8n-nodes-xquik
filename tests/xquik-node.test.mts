@@ -196,15 +196,15 @@ test('execute preserves API errors when continue-on-fail is disabled', async () 
 });
 
 test('execute returns an error item when continue-on-fail is enabled', async () => {
+	const requestError = apiError();
 	const { context } = createExecutionContext([{ resource: 'account', operation: 'getCredits' }], {
 		continueOnFail: true,
-		requestError: apiError(),
+		requestError,
 	});
 
-	const [[item]] = await new Xquik().execute.call(context);
+	const result = await new Xquik().execute.call(context);
 
-	assert.equal(item.pairedItem && typeof item.pairedItem === 'object' && 'item' in item.pairedItem ? item.pairedItem.item : undefined, 0);
-	assert.ok(typeof item.json.error === 'string' && item.json.error.length > 0, String(item.json.error));
+	assert.deepEqual(result, [[{ json: { error: requestError.message }, pairedItem: { item: 0 } }]]);
 });
 
 test('execute reports a safe fallback for non-error failures', async () => {
@@ -227,6 +227,12 @@ for (const [label, parameterError] of [
 			parameterError,
 		});
 
-		await assert.rejects(() => new Xquik().execute.call(context), NodeOperationError);
+		await assert.rejects(
+			() => new Xquik().execute.call(context),
+			(error: unknown) =>
+				error instanceof NodeOperationError &&
+				error.message === 'Invalid parameter.' &&
+				error.context.itemIndex === 0,
+		);
 	});
 }

@@ -21,13 +21,25 @@ export function addOptionalParameter(parameters: IDataObject, name: string, valu
 	}
 }
 
-function isDataObject(value: unknown): value is IDataObject {
-	return (
-		typeof value === 'object' &&
-		value !== null &&
-		!Array.isArray(value) &&
-		Object.values(value).every((entry: unknown) => typeof entry !== 'bigint' && typeof entry !== 'symbol')
-	);
+function toDataObject(value: unknown): IDataObject | undefined {
+	if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+		return undefined;
+	}
+	const data: IDataObject = {};
+	const fields: Readonly<Record<string, unknown>> = { ...value };
+	for (const [key, entry] of Object.entries(fields)) {
+		if (
+			typeof entry !== 'string' &&
+			typeof entry !== 'number' &&
+			typeof entry !== 'boolean' &&
+			typeof entry !== 'object' &&
+			entry !== undefined
+		) {
+			return undefined;
+		}
+		data[key] = entry;
+	}
+	return data;
 }
 
 export async function xquikApiRequest(
@@ -49,9 +61,11 @@ export async function xquikApiRequest(
 		options.qs = query;
 	}
 
-	const response: unknown = await this.helpers.httpRequestWithAuthentication.call(this, 'xquikApi', options);
-	if (isDataObject(response)) {
-		return response;
+	const response = toDataObject(
+		await this.helpers.httpRequestWithAuthentication.call(this, 'xquikApi', options),
+	);
+	if (response === undefined) {
+		throw new NodeOperationError(this.getNode(), 'The Xquik API returned a response that is not a JSON object.');
 	}
-	throw new NodeOperationError(this.getNode(), 'The Xquik API returned a response that is not a JSON object.');
+	return response;
 }

@@ -7,7 +7,7 @@ import { z } from 'zod/v4';
 const EXTRACTED_FILES = 'js/diagnostics/successfully-extracted-files';
 const HARMLESS_LEVELS = new Set(['none', 'note']);
 
-const text = z.object({ text: z.string() });
+const text = z.object({ text: z.string().optional() });
 const sarifResult = z.object({
 	ruleId: z.string().optional(),
 	message: text.optional(),
@@ -16,8 +16,8 @@ const sarifResult = z.object({
 			z.object({
 				physicalLocation: z
 					.object({
-						artifactLocation: z.object({ uri: z.string() }).optional(),
-						region: z.object({ startLine: z.number() }).optional(),
+						artifactLocation: z.object({ uri: z.string().optional() }).optional(),
+						region: z.object({ startLine: z.number().optional() }).optional(),
 					})
 					.optional(),
 			}),

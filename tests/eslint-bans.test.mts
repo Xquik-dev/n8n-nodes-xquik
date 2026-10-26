@@ -88,8 +88,14 @@ const CASES: readonly { readonly file: string; readonly code: string; readonly r
 	{ file: 'definite.mts', code: 'let v!: number;\nv = 1;\nexport { v };\n', rule: 'no-restricted-syntax' },
 	{ file: 'declare.mts', code: 'declare const x: number;\nexport { x };\n', rule: 'no-restricted-syntax' },
 	{
+		file: 'type-predicate.mts',
+		code: 'export const isText = (value: unknown): value is string => value !== undefined;\n',
+		rule: 'no-restricted-syntax',
+	},
+	{ file: 'dom-global.mts', code: 'export const title = document.title;\n', rule: 'no-restricted-globals' },
+	{
 		file: 'type-coverage-ignore.mts',
-		code: '// type-coverage:ignore-next-line\nexport const a = 1;\n',
+		code: '// type-coverage:ignore-next-line https://github.com/plantain-00/type-coverage\nexport const a = 1;\n',
 		rule: 'no-warning-comments',
 	},
 	{ file: 'code-comment.mts', code: '// Explains the next line.\nexport const a = 1;\n', rule: 'xquik/no-code-comments' },
@@ -159,14 +165,30 @@ export const named = names({ a: 1 });
 export const isObject = (v: unknown): boolean => v instanceof Object || typeof Array === "function";
 `;
 
-const rules = await lintProbes({ 'allowed.mts': ALLOWED, ...Object.fromEntries(CASES.map(({ file, code }) => [file, code])) });
+const { reported, rules } = await lintProbes(
+	{ 'allowed.mts': ALLOWED, ...Object.fromEntries(CASES.map(({ file, code }) => [file, code])) },
+	['probe.mts', 'probe.mjs'],
+);
 
 test('the bans report nothing in code that types every value', () => {
-	assert.deepEqual(rules.get('allowed.mts'), []);
+	assert.deepEqual(reported.get('allowed.mts'), []);
 });
 
 for (const { file, rule } of CASES) {
 	test(`the bans report ${rule} in ${file}`, () => {
-		assert.ok(rules.get(file)?.includes(rule), `${file} reported ${JSON.stringify(rules.get(file))}`);
+		assert.ok(reported.get(file)?.includes(rule), `${file} reported ${JSON.stringify(reported.get(file))}`);
+	});
+}
+
+for (const extension of ['.mts', '.mjs']) {
+	test(`every ban on ${extension} files has a probe row`, () => {
+		const rows = CASES.filter(({ file }) => file.endsWith(extension));
+		const enabled = Object.entries(rules.get(`probe${extension}`) ?? {}).filter(([, [severity]]) => severity === 2);
+		assert.deepEqual(
+			enabled.map(([rule]) => rule).filter((rule) => !rows.some((row) => row.rule === rule)),
+			[],
+		);
+		const selectors = enabled.find(([rule]) => rule === 'no-restricted-syntax')?.[1].length ?? 1;
+		assert.equal(rows.filter(({ rule }) => rule === 'no-restricted-syntax').length, selectors - 1);
 	});
 }

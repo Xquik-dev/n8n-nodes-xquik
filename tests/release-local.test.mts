@@ -3,13 +3,14 @@
 
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import test, { type TestContext } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-const script = fileURLToPath(new URL('../bin/release-local', import.meta.url));
+const root = fileURLToPath(new URL('..', import.meta.url));
+const script = join(root, 'bin/release-local');
 const TOKEN = 'npm_isolated_fixture_token';
 
 const FAKES = {
@@ -65,6 +66,8 @@ function release(
 	const fakes = join(folder, 'fakes');
 	for (const path of [join(project, 'bin'), join(project, 'scripts'), fakes]) mkdirSync(path, { recursive: true });
 	copyFileSync(script, join(project, 'bin/release-local'));
+	for (const helper of ['scripts/npm-has-version.mts', 'scripts/pack-integrity.mts']) copyFileSync(join(root, helper), join(project, helper));
+	symlinkSync(join(root, 'node_modules'), join(project, 'node_modules'));
 	writeFileSync(join(project, 'package.json'), JSON.stringify({ name: 'n8n-nodes-xquik', version: '1.2.3' }));
 	writeFileSync(join(project, 'bin/check-local'), '#!/bin/sh\necho checks >> "$EVENTS"\n', { mode: 0o755 });
 	writeFileSync(join(project, 'scripts/check-audit.mts'), 'import { appendFileSync } from "node:fs";\nappendFileSync(process.env.EVENTS, "audit\\n");\n');

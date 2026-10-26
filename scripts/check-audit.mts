@@ -22,7 +22,9 @@ const exceptionEntry = z.object({
 		.regex(/^\d{4}-\d{2}-\d{2}$/u)
 		.refine((value) => !Number.isNaN(Date.parse(value))),
 });
-const entryNeeds: Readonly<Record<string, string>> = {
+type Exception = z.infer<typeof exceptionEntry>;
+
+const entryNeeds: Readonly<Record<keyof Exception, string>> = {
 	advisory: 'an "advisory" like GHSA-xxxx-xxxx-xxxx',
 	package: 'a "package" that names the vulnerable package',
 	reason: 'a "reason" that says why the finding is acceptable',
@@ -38,8 +40,6 @@ const auditReport = z.object({
 		}),
 	),
 });
-
-type Exception = z.infer<typeof exceptionEntry>;
 
 const problems: string[] = [];
 
@@ -70,7 +70,7 @@ function loadExceptions(): Exception[] {
 		if (parsed.success) {
 			return [parsed.data];
 		}
-		const field = String(parsed.error.issues[0].path[0] ?? 'advisory');
+		const field = exceptionEntry.keyof().catch('advisory').parse(parsed.error.issues[0].path[0]);
 		problems.push(`${exceptionsFile} entry ${index + 1} needs ${entryNeeds[field]}.`);
 		return [];
 	});

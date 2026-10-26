@@ -6,6 +6,7 @@ import { n8nCommunityNodesPlugin } from '@n8n/eslint-plugin-community-nodes';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import importPlugin from 'eslint-plugin-import-x';
+import globals from 'globals';
 import { createRequire } from 'node:module';
 import tseslint from 'typescript-eslint';
 import { z } from 'zod/v4';
@@ -17,6 +18,9 @@ const n8nNodesBase = z
 	.parse(createRequire(import.meta.url)('eslint-plugin-n8n-nodes-base'));
 
 const communityNodesRecommended = n8nCommunityNodesPlugin.configs.recommended;
+const domOnlyGlobals = Object.keys(globals.browser)
+	.filter((name) => !Object.hasOwn(globals.node, name))
+	.map((name) => ({ name, message: 'Node code has no DOM. Use a Node or n8n API instead.' }));
 
 export default defineConfig(
 	globalIgnores(['dist']),
@@ -97,12 +101,14 @@ export default defineConfig(
 			'@typescript-eslint/no-unsafe-return': 'error',
 			'@typescript-eslint/use-unknown-in-catch-callback-variable': 'error',
 			'no-eval': 'error',
+			'no-restricted-globals': ['error', ...domOnlyGlobals],
 			'no-restricted-syntax': [
 				'error',
 				{ selector: 'TSDeclareFunction', message: 'Write 1 checked signature instead of overloads.' },
 				{ selector: 'TSEmptyBodyFunctionExpression', message: 'Write 1 checked signature instead of overloads.' },
 				{ selector: '[definite=true]', message: 'Initialize the value instead of asserting that it is set.' },
 				{ selector: '[declare=true]', message: 'Give this value a checked source instead of declaring its type.' },
+				{ selector: 'TSTypePredicate', message: 'Return a checked value instead of a type predicate the compiler trusts.' },
 			],
 			'xquik/no-any-returning-value': 'error',
 			'xquik/no-code-comments': 'error',

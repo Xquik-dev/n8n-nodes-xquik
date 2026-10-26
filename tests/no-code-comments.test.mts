@@ -29,10 +29,10 @@ const CASES: readonly { readonly name: string; readonly code: string; readonly f
 	{ name: 'split', code: '// Unrelated note.\n\n// https://example.com/doc\nexport const a = 1;\n', flagged: 1 },
 ];
 
-const rules = await lintProbes(Object.fromEntries(CASES.map(({ name, code }) => [`${name}.mts`, code])));
+const { reported } = await lintProbes(Object.fromEntries(CASES.map(({ name, code }) => [`${name}.mts`, code])));
 
 for (const { name, flagged } of CASES) {
 	test(`no-code-comments flags ${flagged} comments in the ${name} case`, () => {
-		assert.equal(rules.get(`${name}.mts`)?.filter((rule) => rule === 'xquik/no-code-comments').length, flagged);
+		assert.equal(reported.get(`${name}.mts`)?.filter((rule) => rule === 'xquik/no-code-comments').length, flagged);
 	});
 }
