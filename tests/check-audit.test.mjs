@@ -104,6 +104,17 @@ for (const { label, recheck } of [
 	});
 }
 
+test('check-audit passes a listed finding whose only fix is a major downgrade', () => {
+	const downgrade = { name: 'n8n-workflow', version: '1.75.1', isSemVerMajor: true };
+
+	assert.deepEqual(runAudit({ findings: [finding({ fixAvailable: downgrade })], exceptions: [listed()] }), {
+		status: 0,
+		output:
+			`Accepted the reviewed exception for ${ADVISORY} leftpad (moderate). Recheck by ${day(10)}.\n` +
+			'Audit passed with 1 reviewed exception.\n',
+	});
+});
+
 test('check-audit matches each advisory of 1 package to its own exception', () => {
 	const second = 'GHSA-dddd-eeee-ffff';
 	const result = runAudit({
