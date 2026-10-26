@@ -1,3 +1,10 @@
 {
-	"exceptions": []
+	"exceptions": [
+		{
+			"advisory": "GHSA-mrhx-c7xc-m3w5",
+			"package": "zod",
+			"reason": "n8n-workflow, a development dependency here, pins its zod peer to 3.25.76, and only zod 4.6.6 has the fix. The package ships no zod.",
+			"recheck": "2026-11-25"
+		}
+	]
 }
