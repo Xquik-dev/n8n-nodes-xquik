@@ -27,4 +27,4 @@ printf 'paths-ignore:\n  - dist\n  - node_modules\n  - coverage\n' >"$report/con
 	--source-root="$PWD" --codescanning-config="$report/config.yml" --threads=2
 "$codeql" database analyze --download "$report/database" "$queries" \
 	--format=sarifv2.1.0 --output="$report/report.sarif" --threads=2
-node scripts/verify-codeql.mjs "$report/report.sarif"
+node scripts/verify-codeql.mts "$report/report.sarif"

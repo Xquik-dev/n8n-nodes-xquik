@@ -15,6 +15,7 @@ path = [
   "nodes/Xquik/*.svg",
   "package-lock.json",
   "package.json",
+  "tsconfig.build.json",
   "tsconfig.json",
 ]
 precedence = "aggregate"

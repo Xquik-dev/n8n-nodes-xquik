@@ -9,19 +9,22 @@ import { delimiter, join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-const script = fileURLToPath(new URL('../scripts/check-audit.mjs', import.meta.url));
+const script = fileURLToPath(new URL('../scripts/check-audit.mts', import.meta.url));
 const DAY_MS = 24 * 60 * 60 * 1000;
 const ADVISORY = 'GHSA-aaaa-bbbb-cccc';
 
-function day(offset) {
+type Finding = { id: string; name: string; severity: string; fixAvailable: unknown };
+type AuditResult = { status: number | null; output: string };
+
+function day(offset: number): string {
 	return new Date(Date.now() + offset * DAY_MS).toISOString().slice(0, 10);
 }
 
-function finding(overrides = {}) {
+function finding(overrides: Partial<Finding> = {}): Finding {
 	return { id: ADVISORY, name: 'leftpad', severity: 'moderate', fixAvailable: false, ...overrides };
 }
 
-function listed(overrides = {}) {
+function listed(overrides: Readonly<Record<string, string>> = {}): Record<string, string> {
 	return {
 		advisory: ADVISORY,
 		package: 'leftpad',
@@ -31,8 +34,11 @@ function listed(overrides = {}) {
 	};
 }
 
-function auditReport(findings) {
-	const vulnerabilities = {};
+function auditReport(findings: readonly Finding[]): string {
+	const vulnerabilities: Record<
+		string,
+		{ name: string; severity: string; via: (string | { name: string; severity: string; url: string })[]; fixAvailable: unknown }
+	> = {};
 	for (const { id, name, severity, fixAvailable } of findings) {
 		vulnerabilities[name] ??= { name, severity, via: [], fixAvailable };
 		vulnerabilities[name].via.push({ name, severity, url: `https://github.com/advisories/${id}` });
@@ -49,7 +55,17 @@ process.stdout.write(report);
 process.exit(report.includes('GHSA-') ? 1 : 0);
 `;
 
-function runAudit({ findings = [], productionFindings = [], exceptions, report = auditReport(findings) }) {
+function runAudit({
+	findings = [],
+	productionFindings = [],
+	exceptions,
+	report = auditReport(findings),
+}: {
+	findings?: readonly Finding[];
+	productionFindings?: readonly Finding[];
+	exceptions?: readonly Readonly<Record<string, string>>[];
+	report?: string;
+}): AuditResult {
 	const root = mkdtempSync(join(tmpdir(), 'check-audit-'));
 	try {
 		const bin = join(root, 'bin');
@@ -71,7 +87,7 @@ function runAudit({ findings = [], productionFindings = [], exceptions, report =
 	}
 }
 
-function assertBlocked(result, line) {
+function assertBlocked(result: AuditResult, line: string): void {
 	assert.equal(result.status, 1);
 	assert.ok(result.output.includes(`Blocked. ${line}\n`), result.output);
 	assert.ok(result.output.endsWith('Audit failed. Follow each Blocked line above.\n'), result.output);

@@ -88,7 +88,7 @@ step "Running bin/check-local."
 bin/check-local
 
 step "Auditing all dependencies against the reviewed exceptions."
-node scripts/check-audit.mjs || stop "follow each Blocked line above first."
+node scripts/check-audit.mts || stop "follow each Blocked line above first."
 
 step "Building the package."
 npm run build
