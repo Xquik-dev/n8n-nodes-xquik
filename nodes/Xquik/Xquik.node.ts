@@ -222,7 +222,7 @@ export class Xquik implements INodeType {
 				type: 'number',
 				typeOptions: {
 					minValue: 1,
-					maxValue: 200,
+					maxValue: 10000,
 				},
 				displayOptions: {
 					show: {

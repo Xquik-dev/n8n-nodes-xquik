@@ -176,6 +176,15 @@ for (const { label, parameters, expectedUrl, expectedQuery } of operationCases) 
 	});
 }
 
+test('lets a tweet search ask for as many results as the API returns', () => {
+	const limits = new Xquik().description.properties.filter((property) => property.name === 'limit');
+
+	assert.deepEqual(
+		limits.map((property) => property.typeOptions),
+		[{ minValue: 1, maxValue: 10000 }],
+	);
+});
+
 test('execute returns empty data for an unsupported operation', async () => {
 	const { context, requests } = createExecutionContext([{ resource: 'unknown', operation: 'unknown' }]);
 
