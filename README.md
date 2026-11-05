@@ -3,11 +3,49 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
 [![Convex Component](https://www.convex.dev/components/badge/convex-xquik)](https://www.convex.dev/components/convex-xquik)
 
+This n8n Twitter community node reads X data through Xquik. Search tweets & users, read trends, check follows & view your Xquik credits.
+
 Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data. Xquik charges only for delivered, unique, filter-matching results and never pads rows.
 
 Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
 
-This n8n community node reads X data through Xquik. Search tweets & users, read trends, check follows & view your Xquik credits.
+## Install the n8n Twitter & X node
+
+Install `n8n-nodes-xquik` from **Settings → Community Nodes**.
+
+```sh
+npm install n8n-nodes-xquik
+```
+
+The package is on [npm](https://www.npmjs.com/package/n8n-nodes-xquik).
+
+## Build Twitter automation & a Twitter bot in n8n
+
+This workflow searches X every 15 minutes. Paste it into the n8n editor, then pick your Xquik credential.
+
+```json
+{
+  "nodes": [
+    {
+      "name": "Every 15 minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "parameters": { "rule": { "interval": [{ "field": "minutes", "minutesInterval": 15 }] } }
+    },
+    {
+      "name": "Search tweets",
+      "type": "n8n-nodes-xquik.xquik",
+      "typeVersion": 1,
+      "position": [220, 0],
+      "parameters": { "resource": "tweet", "operation": "search", "query": "n8n -filter:replies", "queryType": "Latest" }
+    }
+  ],
+  "connections": { "Every 15 minutes": { "main": [[{ "node": "Search tweets", "type": "main", "index": 0 }]] } }
+}
+```
+
+Add a Slack, email or HTTP node after it to send each new post on.
 
 <!-- trust:start -->
 
@@ -53,14 +91,6 @@ Checked on 2026-10-15. See each number with its date & source on [xquik.com/trus
 
 Use the [Xquik API](https://docs.xquik.com/api-reference/overview) for full follower exports or approved posting.
 
-## Install
-
-Install `n8n-nodes-xquik` from **Settings → Community Nodes**.
-
-```sh
-npm install n8n-nodes-xquik
-```
-
 ## Credentials
 
 Create an Xquik API key and add it to the Xquik API credential in n8n. The node sends it in the `x-api-key` header.
@@ -85,12 +115,26 @@ It stops at once when either variable is unset. It runs on a clean `main` that m
 
 `bin/release-local --dry-run` runs every check and `npm publish --dry-run`. It reads no token and publishes, tags and releases nothing.
 
+## Questions
+
+### Do I need an X developer account?
+
+No. Public reads need only an Xquik API key. Private reads & X account actions
+need a connected X account.
+
+### Is this the official X API?
+
+No. Xquik is an independent third-party service with its own REST API. This node
+calls that API, not the official X API.
+
 ## More Xquik tools
 
 - [X (Twitter) scraper API & Twitter MCP server](https://github.com/Xquik-dev/x-twitter-scraper) with REST, MCP & Skill setup.
 - Twitter API SDKs for [TypeScript](https://github.com/Xquik-dev/x-twitter-scraper-typescript), [Python](https://github.com/Xquik-dev/x-twitter-scraper-python), [Go](https://github.com/Xquik-dev/x-twitter-scraper-go), [Ruby](https://github.com/Xquik-dev/x-twitter-scraper-ruby), [Java](https://github.com/Xquik-dev/x-twitter-scraper-java), [Kotlin](https://github.com/Xquik-dev/x-twitter-scraper-kotlin), [C#](https://github.com/Xquik-dev/x-twitter-scraper-csharp) & [PHP](https://github.com/Xquik-dev/x-twitter-scraper-php).
-- [Twitter CLI & X CLI](https://github.com/Xquik-dev/x-twitter-scraper-cli) for terminal workflows.
-- [Twitter advanced search operators](https://github.com/Xquik-dev/x-twitter-advanced-search) with tested examples.
+- [Twitter CLI & X CLI](https://github.com/Xquik-dev/x-twitter-scraper-cli) and [Twitter advanced search operators](https://github.com/Xquik-dev/x-twitter-advanced-search) with tested examples.
+- Twitter agent plugins for [OpenClaw](https://github.com/Xquik-dev/tweetclaw) & [Hermes Agent](https://github.com/Xquik-dev/hermes-tweet), and the [Twitter API documentation source](https://github.com/Xquik-dev/xquik-docs).
+- Twitter integrations for [n8n](https://github.com/Xquik-dev/n8n-nodes-xquik), [Prefect](https://github.com/Xquik-dev/prefect-xquik), [Haystack](https://github.com/Xquik-dev/xquik-haystack), [Paperclip](https://github.com/Xquik-dev/paperclip-plugin-xquik), [Terraform](https://github.com/Xquik-dev/terraform-provider-x-twitter-scraper), [Convex](https://github.com/Xquik-dev/xquik-convex), [Supabase](https://github.com/Xquik-dev/xquik-supabase) & [Strapi](https://github.com/Xquik-dev/strapi-plugin-xquik).
+- Twitter MCP for [AI agents](https://github.com/Xquik-dev/xquik-mcp), [VS Code](https://github.com/Xquik-dev/xquik-vscode) & [Raycast](https://github.com/Xquik-dev/xquik-raycast).
 - [Xquik X API & Twitter scraper](https://xquik.com) and the [Twitter API documentation](https://docs.xquik.com/api-reference/overview).
 
 ## Resources
