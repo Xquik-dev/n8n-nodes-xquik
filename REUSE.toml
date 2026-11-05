@@ -10,6 +10,7 @@ path = [
   "audit-exceptions.json",
   "LICENSE",
   "*.md",
+  "CITATION.cff",
   "icons/*.svg",
   "nodes/Xquik/Xquik.node.json",
   "nodes/Xquik/*.svg",
