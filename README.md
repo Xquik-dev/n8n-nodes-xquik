@@ -1,27 +1,46 @@
-# n8n Twitter community node for Xquik
+# n8n Twitter Community Node for Xquik
 
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
-[![Convex Component](https://www.convex.dev/components/badge/convex-xquik)](https://www.convex.dev/components/convex-xquik)
+Use this n8n Twitter node by Xquik to search tweets & users in workflows.
+It also reads trends, checks follows & shows your credits.
 
-This n8n Twitter community node reads X data through Xquik. Search tweets & users, read trends, check follows & view your Xquik credits.
+Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data.
+Most other Apify Actors charge before filtering or deduplication.
+Xquik charges only for delivered, unique, filter-matching results and never pads rows.
+Xquik is independent and not affiliated with X Corp.
 
-Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data. Xquik charges only for delivered, unique, filter-matching results and never pads rows.
-
-Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
+<!-- trust:win:start -->
+The Xquik REST API read 45 tweets per second at $0.15 per 1,000 on 2026-10-15. The fastest of 4 rival Actors read 12.5 per second. The cheapest cost $0.173 per 1,000. [Compare each run](https://xquik.com/benchmarks#benchmark-x-tweet-scraper).
+<!-- trust:win:end -->
 
 ## Install the n8n Twitter & X node
 
-Install `n8n-nodes-xquik` from **Settings → Community Nodes**.
+Self-hosted n8n installs the node from its settings.
+You need the Owner or Admin role.
+
+1. Go to **Settings**, then **Community Nodes**.
+2. Select **Install**.
+3. Enter `n8n-nodes-xquik` as the npm package name.
+4. Agree to the risks, then select **Install**.
+
+An instance in queue mode installs the node from a shell.
+Run these lines in the n8n container, then restart n8n.
 
 ```sh
+mkdir -p ~/.n8n/nodes
+cd ~/.n8n/nodes
 npm install n8n-nodes-xquik
 ```
 
-The package is on [npm](https://www.npmjs.com/package/n8n-nodes-xquik).
+## Add your Xquik API key
+
+1. Copy a key from [your Xquik account](https://dashboard.xquik.com/en/account?tab=api-keys).
+2. Create an **Xquik API** credential in n8n.
+3. Paste the key into **API Key**, then save.
 
 ## Build Twitter automation & a Twitter bot in n8n
 
-This workflow searches X every 15 minutes. Paste it into the n8n editor, then pick your Xquik credential.
+This workflow searches X every 15 minutes.
+Paste it into the n8n editor, then pick your Xquik credential.
 
 ```json
 {
@@ -45,37 +64,21 @@ This workflow searches X every 15 minutes. Paste it into the n8n editor, then pi
 }
 ```
 
-Add a Slack, email or HTTP node after it to send each new post on.
+Next, read the [n8n guide](https://docs.xquik.com/guides/n8n), the [operations table](#operations) or the [n8n community node docs](https://docs.n8n.io/integrations/community-nodes/).
 
 <!-- trust:start -->
 
-## Trust & usage
+## Benchmarks & usage
 
-[![Twitter API package downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fdownloads.json)](https://xquik.com/trust#downloads)
-[![Twitter scraper users on Apify](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fapify-users.json)](https://apify.com/xquik)
-[![Twitter scraper runs on Apify](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fapify-runs.json)](https://apify.com/xquik)
-[![Tweet scraper rating on Apify](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fapify-rating.json)](https://apify.com/xquik/x-tweet-scraper/reviews)
-[![Xquik Twitter API accounts](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Faccounts.json)](https://xquik.com/trust#accounts)
-[![Twitter Skill installs](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fskill-installs.json)](https://xquik.com/trust#skill-installs)
-[![Xquik verified revenue on TrustMRR](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Frevenue.json)](https://trustmrr.com/startup/xquik)
-[![Twitter API median response time](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Frest-p50.json)](https://xquik.com/trust#speed)
-[![Xquik GitHub stars](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fgithub-stars.json)](https://github.com/Xquik-dev)
 [![n8n-nodes-xquik downloads on npm](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fnpm-n8n-nodes-xquik.json)](https://www.npmjs.com/package/n8n-nodes-xquik)
+[![Twitter API p99 server read time](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Frest-p99.json)](https://xquik.com/benchmarks#speed)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
 
-- 51,000+ downloads of Xquik's Twitter API packages on npm, PyPI, RubyGems, NuGet, Packagist & Terraform ([source](https://xquik.com/trust#downloads)) <!-- trust:downloads 51020 -->
-- 7,800+ users of Xquik's Twitter scraper Actors on Apify ([source](https://apify.com/xquik)) <!-- trust:apify-users 7800 -->
-- 5,700,000+ runs of Xquik's Twitter scraper Actors on Apify ([source](https://apify.com/xquik)) <!-- trust:apify-runs 5704701 -->
-- 4.66 of 5 for the X Tweet Scraper from 16 Apify reviews ([source](https://apify.com/xquik/x-tweet-scraper/reviews)) <!-- trust:apify-rating 4.66 16 -->
-- 3,900+ accounts on xquik.com ([source](https://xquik.com/trust#accounts)) <!-- trust:accounts 3924 -->
-- 1,600+ installs of Xquik's Twitter Skills on skills.sh ([source](https://xquik.com/trust#skill-installs)) <!-- trust:skill-installs 1612 -->
-- $38,000+ in revenue verified by TrustMRR ([source](https://trustmrr.com/startup/xquik)) <!-- trust:revenue 38115 -->
-- 501 ms median REST API read time over the last 7 days ([source](https://xquik.com/trust#speed)) <!-- trust:rest-p50 501 -->
-- 370+ GitHub stars across Xquik's repos ([source](https://github.com/Xquik-dev)) <!-- trust:github-stars 374 -->
-- 960+ downloads of n8n-nodes-xquik on npm ([source](https://www.npmjs.com/package/n8n-nodes-xquik)) <!-- trust:npm-n8n-nodes-xquik 964 -->
+- 1,200+ downloads of n8n-nodes-xquik on npm ([source](https://www.npmjs.com/package/n8n-nodes-xquik)) <!-- trust:npm-n8n-nodes-xquik 1288 -->
+- 6.4 s p99 REST API server read time over 7 days, failed reads included ([source](https://xquik.com/benchmarks#speed)) <!-- trust:rest-p99 6317 -->
 - This repo meets the OpenSSF Best Practices passing criteria ([source](https://www.bestpractices.dev/projects/13726)) <!-- trust:openssf-n8n-nodes-xquik 1 -->
 
-Checked on 2026-10-15. See each number with its date & source on [xquik.com/trust](https://xquik.com/trust) or as [JSON](https://xquik.com/trust.json).
+Checked on 2026-11-06. See each number with its date & source on [xquik.com/benchmarks](https://xquik.com/benchmarks) or as [JSON](https://xquik.com/trust.json).
 
 <!-- trust:end -->
 
@@ -86,62 +89,41 @@ Checked on 2026-10-15. See each number with its date & source on [xquik.com/trus
 | Search tweets | Tweet | Search | `GET /x/tweets/search` |
 | Search users | User | Search | `GET /x/users/search` |
 | Read regional trends | Trend | Get Many | `GET /trends` |
-| Check whether one account follows another | Follow | Check | `GET /x/followers/check` |
+| Check whether 1 account follows another | Follow | Check | `GET /x/followers/check` |
 | View available credits | Account | Get Credits | `GET /credits` |
 
-Use the [Xquik API](https://docs.xquik.com/api-reference/overview) for full follower exports or approved posting.
-
-## Credentials
-
-Create an Xquik API key and add it to the Xquik API credential in n8n. The node sends it in the `x-api-key` header.
-
-## Verify changes
-
-```sh
-bin/check-local
-```
-
-It installs from the lockfile, builds, type checks, tests, lints, audits dependencies, verifies registry signatures, and checks reproducible package bytes. Tests enforce 100% coverage and check request contracts. It also checks REUSE 3.3 metadata with a pinned `reuse`, which `uvx` runs, so install uv first. Last, it runs CodeQL's security-extended queries and fails on any result, so install CodeQL with `brew install --cask codeql`. It stops at the first failure and says what to fix. The audit covers every dependency at every severity. A development finding passes only through a reviewed entry in `audit-exceptions.json`, with a recheck date at most 30 days out. When the tree is clean and the commit is on GitHub, it posts the result as the `xquik-local-checks` commit status. Pass `--no-status` to skip that.
-
-## Release
-
-Maintainers release from a local machine. The npm token stays in the macOS Keychain. 2 environment variables name its Keychain item.
-
-```sh
-NPM_KEYCHAIN_SERVICE=<service> NPM_KEYCHAIN_ACCOUNT=<account> bin/release-local
-```
-
-It stops at once when either variable is unset. It runs on a clean `main` that matches `origin/main`. It runs `bin/check-local`, publishes the `package.json` version to npm, and checks that npm serves the same package it built. Only then it pushes tag `v<version>` and creates its GitHub release. It skips the npm upload when that version is already published.
-
-`bin/release-local --dry-run` runs every check and `npm publish --dry-run`. It reads no token and publishes, tags and releases nothing.
+The node sends your key in the `x-api-key` header.
+Add a Slack, email or HTTP node after a search to forward results.
+Use the [Xquik API](https://docs.xquik.com/api-reference/overview) for full follower exports or posting.
 
 ## Questions
 
 ### Do I need an X developer account?
 
-No. Public reads need only an Xquik API key. Private reads & X account actions
-need a connected X account.
+No. Public reads need only an Xquik API key.
+Private reads & X account actions need a connected X account.
 
 ### Is this the official X API?
 
-No. Xquik is an independent third-party service with its own REST API. This node
-calls that API, not the official X API.
+No. Xquik runs its own REST API.
+This node calls that API, not the official X API.
 
 ## More Xquik tools
 
 - [X (Twitter) scraper API & Twitter MCP server](https://github.com/Xquik-dev/x-twitter-scraper) with REST, MCP & Skill setup.
 - Twitter API SDKs for [TypeScript](https://github.com/Xquik-dev/x-twitter-scraper-typescript), [Python](https://github.com/Xquik-dev/x-twitter-scraper-python), [Go](https://github.com/Xquik-dev/x-twitter-scraper-go), [Ruby](https://github.com/Xquik-dev/x-twitter-scraper-ruby), [Java](https://github.com/Xquik-dev/x-twitter-scraper-java), [Kotlin](https://github.com/Xquik-dev/x-twitter-scraper-kotlin), [C#](https://github.com/Xquik-dev/x-twitter-scraper-csharp) & [PHP](https://github.com/Xquik-dev/x-twitter-scraper-php).
-- [Twitter CLI & X CLI](https://github.com/Xquik-dev/x-twitter-scraper-cli) and [Twitter advanced search operators](https://github.com/Xquik-dev/x-twitter-advanced-search) with tested examples.
+- [Twitter CLI & X CLI](https://github.com/Xquik-dev/x-twitter-scraper-cli) for terminal workflows.
+- The [X API alternative skill](https://github.com/Xquik-dev/x-api) & [Twitter advanced search operators](https://github.com/Xquik-dev/x-twitter-advanced-search).
 - Twitter agent plugins for [OpenClaw](https://github.com/Xquik-dev/tweetclaw) & [Hermes Agent](https://github.com/Xquik-dev/hermes-tweet), and the [Twitter API documentation source](https://github.com/Xquik-dev/xquik-docs).
-- Twitter integrations for [n8n](https://github.com/Xquik-dev/n8n-nodes-xquik), [Prefect](https://github.com/Xquik-dev/prefect-xquik), [Haystack](https://github.com/Xquik-dev/xquik-haystack), [Paperclip](https://github.com/Xquik-dev/paperclip-plugin-xquik), [Terraform](https://github.com/Xquik-dev/terraform-provider-x-twitter-scraper), [Convex](https://github.com/Xquik-dev/xquik-convex), [Supabase](https://github.com/Xquik-dev/xquik-supabase) & [Strapi](https://github.com/Xquik-dev/strapi-plugin-xquik).
+- Twitter integrations for [Prefect](https://github.com/Xquik-dev/prefect-xquik), [Haystack](https://github.com/Xquik-dev/xquik-haystack), [Paperclip](https://github.com/Xquik-dev/paperclip-plugin-xquik), [Terraform](https://github.com/Xquik-dev/terraform-provider-x-twitter-scraper), [Convex](https://github.com/Xquik-dev/xquik-convex), [Supabase](https://github.com/Xquik-dev/xquik-supabase) & [Strapi](https://github.com/Xquik-dev/strapi-plugin-xquik).
 - Twitter MCP for [AI agents](https://github.com/Xquik-dev/xquik-mcp), [VS Code](https://github.com/Xquik-dev/xquik-vscode) & [Raycast](https://github.com/Xquik-dev/xquik-raycast).
 - [Xquik X API & Twitter scraper](https://xquik.com) and the [Twitter API documentation](https://docs.xquik.com/api-reference/overview).
 
-## Resources
+## Help & contributing
 
-- [n8n community nodes](https://docs.n8n.io/integrations/community-nodes/)
-- [Xquik API authentication](https://docs.xquik.com/api-reference/authentication)
-- [Xquik API overview](https://docs.xquik.com/api-reference/overview)
-- [Organization support policy](https://github.com/Xquik-dev/.github/blob/main/SUPPORT.md)
-- [Organization security policy](https://github.com/Xquik-dev/.github/blob/main/SECURITY.md)
-- [Contribution guide](https://github.com/Xquik-dev/.github/blob/main/CONTRIBUTING.md)
+- Read the [Xquik API authentication guide](https://docs.xquik.com/api-reference/authentication).
+- Ask usage questions through the [organization support policy](https://github.com/Xquik-dev/.github/blob/main/SUPPORT.md).
+- Report vulnerabilities through the [organization security policy](https://github.com/Xquik-dev/.github/blob/main/SECURITY.md).
+- Read the [contribution guide](https://github.com/Xquik-dev/.github/blob/main/CONTRIBUTING.md), then run `bin/check-local`.
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
