@@ -1,6 +1,6 @@
 # n8n X (Twitter) Integration by Xquik
 
-Use this n8n X (Twitter) integration by Xquik to search tweets & users.
+Use this n8n X (Twitter) integration by Xquik to search tweets, posts & users.
 It also reads trends, checks follows & shows your credits.
 
 Xquik is the world's fastest and cheapest X (Twitter) scraper service with the most complete X (Twitter) data.
