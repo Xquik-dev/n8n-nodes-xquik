@@ -8,6 +8,8 @@
 		"n8n-community-node-package",
 		"n8n",
 		"n8n-twitter",
+    "twitter-automation",
+    "twitter-bot",
 		"n8n-twitter-scraper",
 		"n8n-twitter-api",
 		"n8n-twitter-node",
