@@ -1,6 +1,6 @@
-# n8n Twitter Community Node for Xquik
+# n8n Twitter Integration by Xquik
 
-Use this n8n Twitter node by Xquik to search tweets & users in workflows.
+Use this n8n Twitter integration by Xquik to search tweets & users in workflows.
 It also reads trends, checks follows & shows your credits.
 
 Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data.
