@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: If you use Xquik n8n Twitter node, cite it using this metadata.
+title: Xquik n8n Twitter node
+type: software
+abstract: >-
+  n8n Twitter community node for Xquik. Build Twitter automation & Twitter bot
+  workflows with tweet search, user lookup, trends & follow checks in n8n.
+authors:
+  - name: Xquik
+    website: https://xquik.com
+url: https://github.com/Xquik-dev/n8n-nodes-xquik
+repository-code: https://github.com/Xquik-dev/n8n-nodes-xquik
+license: MIT
+keywords:
+  - Xquik
+  - n8n Twitter
+  - n8n X
+  - n8n community node
+  - Twitter automation
+  - Twitter bot
+  - X API
