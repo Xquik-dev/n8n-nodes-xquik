@@ -64,7 +64,7 @@
 		"@sentry/node": "10.70.0",
 		"@types/express": "5.0.6",
 		"@types/luxon": "3.2.0",
-		"@types/node": "24.10.1",
+		"@types/node": "26.6.6",
 		"@types/semver": "7.7.1",
 		"@types/ssh2": "1.15.0",
 		"@typescript-eslint/type-utils": "8.71.2",
