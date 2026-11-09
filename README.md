@@ -76,11 +76,11 @@ Next, read the [n8n guide](https://docs.xquik.com/guides/n8n), the [operations t
 [![X (Twitter) API p99 server read time](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Frest-p99.json)](https://xquik.com/benchmarks#speed)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13726/badge)](https://www.bestpractices.dev/projects/13726)
 
-- 1,200+ downloads of n8n-nodes-xquik on npm ([source](https://www.npmjs.com/package/n8n-nodes-xquik)) <!-- trust:npm-n8n-nodes-xquik 1288 -->
-- 6.1 s p99 REST server read time over 7 days, failures included ([source](https://xquik.com/benchmarks#speed)) <!-- trust:rest-p99 6050 -->
+- 1,300+ downloads of n8n-nodes-xquik on npm ([source](https://www.npmjs.com/package/n8n-nodes-xquik)) <!-- trust:npm-n8n-nodes-xquik 1342 -->
+- 4.9 s p99 REST server read time over 7 days, failures included ([source](https://xquik.com/benchmarks#speed)) <!-- trust:rest-p99 4871 -->
 - This repo meets the OpenSSF Best Practices passing criteria ([source](https://www.bestpractices.dev/projects/13726)) <!-- trust:openssf-n8n-nodes-xquik 1 -->
 
-Checked on 2026-11-07. See each number with its date & source on [xquik.com/benchmarks](https://xquik.com/benchmarks) or as [JSON](https://xquik.com/trust.json).
+Checked on 2026-11-09. See each number with its date & source on [xquik.com/benchmarks](https://xquik.com/benchmarks) or as [JSON](https://xquik.com/trust.json).
 
 <!-- trust:end -->
 
