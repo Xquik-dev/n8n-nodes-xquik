@@ -1,5 +1,6 @@
 dist/
-node_modules/
+# bin/install-dev links node_modules to dev/node_modules, & a link is no directory.
+node_modules
 *.tgz
 .DS_Store
 .tsbuildinfo

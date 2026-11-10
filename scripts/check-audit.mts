@@ -78,7 +78,7 @@ function loadExceptions(): Exception[] {
 
 function auditAdvisories(extraArgs: readonly string[]): Map<string, { label: string; package: string; fixable: boolean }> {
 	const result = spawnSync('npm', ['audit', '--json', ...extraArgs], {
-		cwd: root,
+		cwd: join(root, 'dev'),
 		encoding: 'utf8',
 		maxBuffer: 256 * 1024 * 1024,
 	});
