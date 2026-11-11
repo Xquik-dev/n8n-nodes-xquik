@@ -72,8 +72,9 @@ function runAudit({
 		mkdirSync(bin);
 		writeFileSync(join(bin, 'npm'), fakeNpm);
 		chmodSync(join(bin, 'npm'), 0o755);
-		writeFileSync(join(root, 'audit.json'), report);
-		writeFileSync(join(root, 'production-audit.json'), auditReport(productionFindings));
+		mkdirSync(join(root, 'dev'));
+		writeFileSync(join(root, 'dev', 'audit.json'), report);
+		writeFileSync(join(root, 'dev', 'production-audit.json'), auditReport(productionFindings));
 		if (exceptions !== undefined) {
 			writeFileSync(join(root, 'audit-exceptions.json'), JSON.stringify({ exceptions }));
 		}

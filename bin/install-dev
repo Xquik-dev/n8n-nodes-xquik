@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Xquik Contributors
+# SPDX-License-Identifier: MIT
+
+# Installs the development tree from dev/package.json, whose overrides the
+# published package.json may not hold, & links it where Node & tsc look.
+
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+npm ci --prefix dev --ignore-scripts --no-audit --no-fund
+ln -sfn dev/node_modules node_modules
