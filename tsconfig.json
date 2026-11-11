@@ -13,7 +13,11 @@
 		"noUnusedLocals": true,
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
-		"outDir": "./dist/"
+		"outDir": "./dist/",
+		"paths": {
+			"zod": ["./node_modules/zod/v3/index.d.ts"]
+		}
 	},
-	"include": ["**/*"]
+	"include": ["**/*"],
+	"exclude": ["node_modules", "dev", "dist"]
 }
