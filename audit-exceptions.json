@@ -1,10 +1,3 @@
 {
-	"exceptions": [
-		{
-			"advisory": "GHSA-g3hv-75wg-m249",
-			"package": "minimatch",
-			"reason": "dev/package.json overrides every other minimatch 10 with 11.0.4. eslint-plugin-import-x 4.17.1 imports makeRe, which minimatch 11 removed, so it keeps 10.2.5 until 4.18.0, which takes minimatch 11, is 7 days old on 2026-11-13. Minimatch reaches only the lint tooling in the development tree, and the package ships no minimatch.",
-			"recheck": "2026-11-14"
-		}
-	]
+	"exceptions": []
 }
