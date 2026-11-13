@@ -4,7 +4,7 @@
 	"description": "Development tooling for n8n-nodes-xquik. npm publishes only the root package.json, so the overrides here never reach it.",
 	"license": "MIT",
 	"devDependencies": {
-		"@eslint/js": "9.29.0",
+		"@eslint/js": "10.0.1",
 		"@langchain/core": "1.2.8",
 		"@n8n/config": "2.42.0",
 		"@n8n/eslint-plugin-community-nodes": "0.39.0",
