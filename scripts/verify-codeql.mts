@@ -29,8 +29,6 @@ const sarifNotification = z.object({
 	descriptor: z.object({ id: z.string() }).optional(),
 	message: text.optional(),
 });
-// Zod 4.6 requires an unknown key unless it is optional, & each check below
-// names the key a report lacks.
 const sarifInvocation = z.object({
 	executionSuccessful: z.unknown().optional(),
 	toolExecutionNotifications: z.unknown().optional(),
