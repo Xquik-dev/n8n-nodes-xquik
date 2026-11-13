@@ -18,7 +18,7 @@
 		"@typescript-eslint/utils": "8.71.2",
 		"eslint": "9.29.0",
 		"eslint-import-resolver-typescript": "4.4.5",
-		"eslint-plugin-import-x": "4.17.1",
+		"eslint-plugin-import-x": "4.18.0",
 		"eslint-plugin-n8n-nodes-base": "2.0.0",
 		"globals": "17.13.0",
 		"n8n-workflow": "2.44.1",
@@ -31,9 +31,6 @@
 	},
 	"overrides": {
 		"minimatch@^10": "11.0.4",
-		"eslint-plugin-import-x": {
-			"minimatch": "10.2.5"
-		},
 		"zod": "4.6.7"
 	}
 }
