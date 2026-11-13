@@ -29,9 +29,12 @@ const sarifNotification = z.object({
 	descriptor: z.object({ id: z.string() }).optional(),
 	message: text.optional(),
 });
-const sarifInvocation = z.object({ executionSuccessful: z.unknown(), toolExecutionNotifications: z.unknown() });
-const sarifRun = z.object({ invocations: z.unknown(), results: z.unknown() });
-const sarifReport = z.object({ runs: z.unknown(), version: z.unknown() });
+const sarifInvocation = z.object({
+	executionSuccessful: z.unknown().optional(),
+	toolExecutionNotifications: z.unknown().optional(),
+});
+const sarifRun = z.object({ invocations: z.unknown().optional(), results: z.unknown().optional() });
+const sarifReport = z.object({ runs: z.unknown().optional(), version: z.unknown().optional() });
 
 function list(value: unknown, name: string): unknown[] {
 	const parsed = z.array(z.unknown()).min(1).safeParse(value);
