@@ -21,25 +21,28 @@ export function addOptionalParameter(parameters: IDataObject, name: string, valu
 	}
 }
 
+function isDataValue(entry: unknown): entry is IDataObject[string] {
+	return (
+		typeof entry === 'string' ||
+		typeof entry === 'number' ||
+		typeof entry === 'boolean' ||
+		typeof entry === 'object' ||
+		entry === undefined
+	);
+}
+
 function toDataObject(value: unknown): IDataObject | undefined {
 	if (typeof value !== 'object' || value === null || Array.isArray(value)) {
 		return undefined;
 	}
-	const data: IDataObject = {};
-	const fields: Readonly<Record<string, unknown>> = { ...value };
-	for (const [key, entry] of Object.entries(fields)) {
-		if (
-			typeof entry !== 'string' &&
-			typeof entry !== 'number' &&
-			typeof entry !== 'boolean' &&
-			typeof entry !== 'object' &&
-			entry !== undefined
-		) {
+	const fields: [string, IDataObject[string]][] = [];
+	for (const [key, entry] of Object.entries(value)) {
+		if (!isDataValue(entry)) {
 			return undefined;
 		}
-		data[key] = entry;
+		fields.push([key, entry]);
 	}
-	return data;
+	return Object.fromEntries(fields);
 }
 
 export async function xquikApiRequest(
