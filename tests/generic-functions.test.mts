@@ -4,6 +4,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
+import fc from 'fast-check';
+
 import type { IHttpRequestOptions } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow/dist/cjs/index.js';
 
@@ -97,3 +99,31 @@ for (const [label, response] of [
 		await assert.rejects(() => xquikApiRequest.call(context, 'GET', '/credits'), NodeOperationError);
 	});
 }
+
+test('xquikApiRequest returns every JSON object the API answers, own keys included, and refuses every other answer', async () => {
+	await fc.assert(
+		fc.asyncProperty(fc.jsonValue(), async (value) => {
+			const answer: unknown = JSON.parse(JSON.stringify(value));
+			const { context } = createContext(answer);
+			const request = xquikApiRequest.call(context, 'GET', '/x/tweets/search');
+			if (typeof answer === 'object' && answer !== null && !Array.isArray(answer)) {
+				assert.deepEqual(await request, answer);
+			} else {
+				await assert.rejects(request, NodeOperationError);
+			}
+		}),
+	);
+});
+
+test('xquikApiRequest keeps a __proto__ key of the answer as its own field', async () => {
+	const answer: unknown = JSON.parse('{"__proto__":{"admin":true},"ok":true}');
+	const { context } = createContext(answer);
+
+	const response = await xquikApiRequest.call(context, 'GET', '/x/tweets/search');
+
+	assert.deepEqual(Object.entries(response), [
+		['__proto__', { admin: true }],
+		['ok', true],
+	]);
+	assert.equal(Object.getPrototypeOf(response), Object.prototype);
+});
